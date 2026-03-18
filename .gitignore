@@ -1,0 +1,59 @@
+# Environment
+.env
+.env.*
+.env.local
+.env.development
+.env.staging
+.env.production
+.env.test
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+
+# Distribution
+dist/
+build/
+wheels/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.db
+test.db
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Alembic (keep versions, ignore compiled)
+alembic/__pycache__/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Assets (large binary files)
+assets/*.pdf
+assets/*.png
+assets/*.jpg

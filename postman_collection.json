@@ -1,0 +1,511 @@
+{
+  "info": {
+    "name": "Syncscore API",
+    "description": "Badge-based onboarding API for Syncscore trust layer marketplace",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Status ok', () => pm.expect(pm.response.json().status).to.eql('ok'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": "{{host}}/health"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Badge 1 — Auth",
+      "item": [
+        {
+          "name": "1. Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.test('Email matches', () => {",
+                  "  pm.expect(pm.response.json().email).to.eql(pm.environment.get('email'));",
+                  "});",
+                  "pm.test('is_active is false', () => pm.expect(pm.response.json().is_active).to.be.false);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"entity_type\": \"{{entity_type}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "2. Verify OTP",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.environment.set('access_token', body.access_token);",
+                  "pm.environment.set('refresh_token', body.refresh_token);",
+                  "pm.test('Got access token', () => pm.expect(body.access_token).to.be.a('string'));",
+                  "console.log('Tokens saved to environment.');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/verify-otp",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"otp\": \"{{otp}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "3. Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.environment.set('access_token', body.access_token);",
+                  "pm.environment.set('refresh_token', body.refresh_token);",
+                  "console.log('Tokens refreshed from login.');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "4. Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.environment.set('access_token', body.access_token);",
+                  "pm.environment.set('refresh_token', body.refresh_token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/token/refresh",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{refresh_token}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "5. OAuth Redirect — Google",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/auth/oauth/google"
+          }
+        },
+        {
+          "name": "6. OAuth Redirect — LinkedIn",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/auth/oauth/linkedin"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Badge 2 — Presence",
+      "item": [
+        {
+          "name": "1. Save Profile URLs",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('LinkedIn saved', () => pm.expect(pm.response.json().linkedin_url).to.include('linkedin.com'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": "{{base_url}}/presence/profiles",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"linkedin_url\": \"{{linkedin_url}}\",\n  \"github_url\": \"{{github_url}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "2. Submit Artifact",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "const body = pm.response.json();",
+                  "pm.environment.set('artifact_id', body.id);",
+                  "pm.test('Status is pending', () => pm.expect(body.validation_status).to.eql('pending'));",
+                  "console.log('artifact_id saved:', body.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": "{{base_url}}/presence/artifacts",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"artifact_type\": \"{{artifact_type}}\",\n  \"url\": \"{{artifact_url}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "3. List All Artifacts",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Is array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/presence/artifacts"
+          }
+        },
+        {
+          "name": "4. Poll Artifact Status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "console.log('Validation status:', body.validation_status);",
+                  "if (body.validation_details) console.log('Details:', JSON.stringify(body.validation_details));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/presence/artifacts/{{artifact_id}}/status"
+          }
+        },
+        {
+          "name": "5. Trigger Badge 2 Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "console.log('badge_2:', body.badge_2, '| publicly_searchable:', body.is_publicly_searchable);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/presence/verify"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Badge 3 — Capability",
+      "item": [
+        {
+          "name": "1. Submit Declaration",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Deployment type saved', () => {",
+                  "  pm.expect(pm.response.json().deployment_type).to.eql(pm.environment.get('deployment_type'));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": "{{base_url}}/capability/declaration",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rag_capability\": true,\n  \"rag_detail\": \"Uses FAISS + OpenAI embeddings for semantic search\",\n  \"agent_systems\": true,\n  \"agent_systems_detail\": \"LangGraph multi-agent orchestration\",\n  \"tool_orchestration\": true,\n  \"tool_orchestration_detail\": \"Custom tool registry with 12 integrations\",\n  \"memory_systems\": false,\n  \"deployment_type\": \"{{deployment_type}}\",\n  \"frameworks\": [\"LangChain\", \"FastAPI\", \"LangGraph\"]\n}"
+            }
+          }
+        },
+        {
+          "name": "2. Get Declaration",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/capability/declaration"
+          }
+        },
+        {
+          "name": "3. Generate Capability Document",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('Has confidence score', () => pm.expect(body.confidence_score).to.be.a('number'));",
+                  "pm.test('Has valid tier', () => pm.expect(['Bronze','Silver','Gold']).to.include(body.tier));",
+                  "pm.test('Has narrative', () => pm.expect(body.narrative).to.be.a('string'));",
+                  "console.log('Score:', body.confidence_score, '| Tier:', body.tier);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/capability/document/generate"
+          }
+        },
+        {
+          "name": "4. Get Capability Document",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/capability/document"
+          }
+        },
+        {
+          "name": "5. Patch Document (Producer Editable Fields)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": "{{base_url}}/capability/document",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"narrative\": \"We build production-grade RAG pipelines for enterprise clients.\",\n  \"positioning\": \"The go-to AI infrastructure partner for regulated industries.\",\n  \"focus_industries\": [\"Finance\", \"Healthcare\", \"Legal\"]\n}"
+            }
+          }
+        },
+        {
+          "name": "6. Patch Document — Reject System Field (422)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Rejected with 422', () => pm.response.to.have.status(422));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": "{{base_url}}/capability/document",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confidence_score\": 99\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Badge 4 — Execution (Stubs)",
+      "item": [
+        {
+          "name": "1. Get Challenge",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Not implemented', () => pm.expect(pm.response.json().status).to.eql('not_implemented'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/execution/challenge"
+          }
+        },
+        {
+          "name": "2. Submit Execution",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/execution/submit"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Cases",
+      "item": [
+        {
+          "name": "No Token — 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Rejected without token', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/presence/artifacts"
+          }
+        },
+        {
+          "name": "Duplicate Email — 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Conflict 409', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"entity_type\": \"{{entity_type}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Badge 2 Endpoint without Badge 2 — 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Forbidden 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": "{{base_url}}/capability/declaration"
+          }
+        }
+      ]
+    }
+  ]
+}

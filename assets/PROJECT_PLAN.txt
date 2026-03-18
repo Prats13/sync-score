@@ -1,0 +1,311 @@
+ Syncscore — FastAPI Badge-Based Onboarding Backend
+
+ Context
+
+ Syncscore is a trust layer marketplace connecting AI service producers with non-technical buyers.
+ The backend's core job is to implement a progressive 4-badge onboarding system that turns a raw
+ sign-up into a publicly searchable, credibility-verified producer profile.
+ Three subsystems drive the product's value: (1) badge state machine, (2) async artifact validation
+ pipeline, (3) confidence scoring + LLM capability document generation.
+
+ ---
+ Stack
+
+ ┌─────────────┬────────────────────────────────────────────────────┐
+ │    Layer    │                       Choice                       │
+ ├─────────────┼────────────────────────────────────────────────────┤
+ │ Framework   │ FastAPI + Uvicorn                                  │
+ ├─────────────┼────────────────────────────────────────────────────┤
+ │ ORM         │ SQLAlchemy 2.0 async (asyncpg) + Alembic           │
+ ├─────────────┼────────────────────────────────────────────────────┤
+ │ DB          │ PostgreSQL 16                                      │
+ ├─────────────┼────────────────────────────────────────────────────┤
+ │ Cache / OTP │ Redis 7                                            │
+ ├─────────────┼────────────────────────────────────────────────────┤
+ │ Auth        │ JWT via python-jose + passlib[bcrypt]              │
+ ├─────────────┼────────────────────────────────────────────────────┤
+ │ HTTP client │ httpx async (OAuth + artifact checks + GitHub API) │
+ ├─────────────┼────────────────────────────────────────────────────┤
+ │ LLM         │ Anthropic Claude API (anthropic SDK)               │
+ ├─────────────┼────────────────────────────────────────────────────┤
+ │ Config      │ pydantic-settings                                  │
+ ├─────────────┼────────────────────────────────────────────────────┤
+ │ Infra dev   │ docker-compose.yml (Postgres + Redis only)         │
+ └─────────────┴────────────────────────────────────────────────────┘
+
+ ---
+ Project Structure
+
+ sync-score/
+ ├── app/
+ │   ├── main.py
+ │   ├── deps.py                      # DI: get_db, get_current_user, require_badge_N
+ │   ├── core/
+ │   │   ├── config.py                # Pydantic Settings (all env vars)
+ │   │   ├── database.py              # async engine + AsyncSessionLocal + Base
+ │   │   ├── redis.py                 # singleton async Redis client
+ │   │   └── security.py             # hash_password, verify_password, create/decode JWT
+ │   ├── models/
+ │   │   ├── user.py                  # User (badges, OAuth, presence URLs)
+ │   │   ├── proof_artifact.py        # ProofArtifact + enums
+ │   │   └── capability.py           # CapabilityDeclaration + CapabilityDocument
+ │   ├── schemas/
+ │   │   ├── auth.py
+ │   │   ├── presence.py
+ │   │   └── capability.py
+ │   ├── api/v1/
+ │   │   ├── router.py               # mounts all sub-routers
+ │   │   ├── auth.py                 # Badge 1 endpoints
+ │   │   ├── presence.py             # Badge 2 endpoints
+ │   │   ├── capability.py           # Badge 3 endpoints
+ │   │   └── execution.py            # Badge 4 stubs
+ │   └── services/
+ │       ├── otp_service.py
+ │       ├── oauth_service.py
+ │       ├── artifact_service.py     # async HTTP checks
+ │       ├── github_service.py       # GitHub API signals
+ │       ├── confidence_engine.py    # scoring algorithm
+ │       └── capability_doc.py       # Claude API integration
+ ├── alembic/
+ ├── tests/
+ │   ├── test_auth.py
+ │   ├── test_presence.py
+ │   └── test_capability.py
+ ├── requirements.txt
+ ├── .env.example
+ ├── alembic.ini
+ └── docker-compose.yml
+
+ ---
+ Build Phases
+
+ Phase 0 — Scaffold + Infrastructure
+
+ Files: requirements.txt, docker-compose.yml, .env.example, alembic.ini
+
+ - docker-compose.yml: db (postgres:16-alpine, port 5432) + redis (redis:7-alpine, port 6379). Named volumes. No app container.
+ - requirements.txt:
+ fastapi>=0.111.0, uvicorn[standard], sqlalchemy[asyncio]>=2.0.30, asyncpg,
+ alembic, redis[asyncio], httpx, python-jose[cryptography], passlib[bcrypt],
+ pydantic-settings, pydantic[email], anthropic, python-multipart, pytest-asyncio
+ - core/config.py: pydantic_settings.BaseSettings with: DATABASE_URL, REDIS_URL,
+ SECRET_KEY, ALGORITHM="HS256", ACCESS_TOKEN_EXPIRE_MINUTES=30,
+ OTP_TTL_SECONDS=600, GOOGLE_CLIENT_ID/SECRET/REDIRECT_URI,
+ LINKEDIN_CLIENT_ID/SECRET/REDIRECT_URI, ANTHROPIC_API_KEY, GITHUB_TOKEN
+ - core/database.py: async engine + AsyncSessionLocal (expire_on_commit=False) + Base
+ - core/redis.py: lazy singleton get_redis() returning aioredis.Redis
+ - core/security.py: hash_password, verify_password, create_access_token,
+ create_refresh_token, decode_token
+
+ ---
+ Phase 1 — ORM Models (SQLAlchemy 2.0 Mapped syntax throughout)
+
+ app/models/user.py — User
+ id (UUID PK), email (unique), hashed_password (nullable — OAuth users),
+ entity_type (enum: individual/company), is_active (False until OTP verified),
+ badge_1..badge_4 (bool), is_publicly_searchable (bool),
+ oauth_provider (enum: google/linkedin, nullable), oauth_id (nullable),
+ linkedin_url, github_url, created_at, updated_at
+ Relationships: proof_artifacts (list), capability_declaration (one), capability_document (one)
+
+ app/models/proof_artifact.py — ProofArtifact
+ id (UUID PK), user_id (FK), artifact_type (enum: github_repo/live_demo/product_page/
+ tech_blog/sandbox_deployment/case_study), url, validation_status (enum:
+ pending/in_progress/passed/failed), validation_details (JSON), created_at
+ JSON blob shape for github_repo: {accessible, last_push_date, recency_days, stars, commits_count, language, coherence_note}
+ JSON blob shape for others: {accessible, http_status, recency_days, coherence_note}
+
+ app/models/capability.py — CapabilityDeclaration + CapabilityDocument
+
+ CapabilityDeclaration:
+ id, user_id (FK unique), rag_capability+detail, agent_systems+detail,
+ tool_orchestration+detail, memory_systems+detail, deployment_type
+ (enum: cloud/on_prem/hybrid), frameworks (JSON array), created_at, updated_at
+
+ CapabilityDocument:
+ id, user_id (FK unique), declaration_id (FK),
+ # Producer-editable:
+ narrative (Text), positioning (Text), focus_industries (JSON array),
+ # System-controlled (never writable via PATCH):
+ verified_capabilities (JSON), declared_capabilities (JSON),
+ confidence_score (int 0–100), tier (enum: Bronze/Silver/Gold),
+ execution_verified (bool), raw_llm_output (Text), created_at, updated_at
+
+ Alembic: alembic init alembic → configure env.py to import Base.metadata → alembic revision --autogenerate -m "initial" → alembic upgrade head
+
+ ---
+ Phase 2 — Pydantic v2 Schemas
+
+ schemas/auth.py: RegisterRequest (email, password≥8, entity_type), OTPVerifyRequest,
+ LoginRequest, TokenResponse (access+refresh+type), UserResponse (from_attributes=True)
+
+ schemas/presence.py: PresenceProfileRequest (linkedin_url with regex, github_url with regex),
+ ArtifactSubmitRequest (type + HttpUrl), ArtifactStatusResponse
+
+ schemas/capability.py: CapabilityDeclarationRequest (all fields + frameworks list),
+ CapabilityDocumentPatchRequest (narrative + positioning + focus_industries ONLY — schema enforces boundary),
+ CapabilityDocumentResponse (all fields, from_attributes=True)
+
+ ---
+ Phase 3 — Dependency Injection (app/deps.py)
+
+ get_db()               → yields AsyncSession (commit on success, rollback on error)
+ get_current_user()     → decodes JWT, fetches User, checks is_active
+ require_badge_1()      → depends on get_current_user, checks badge_1
+ require_badge_2()      → depends on require_badge_1, checks badge_2 (chained = enforces order)
+
+ ---
+ Phase 4 — Services
+
+ otp_service.py
+ - generate_and_store_otp(email) → secrets.randbelow(1_000_000) zero-padded to 6 digits →
+ bcrypt hash → redis.setex(f"otp:{email}", 600, hash) → returns plaintext OTP
+ - verify_otp(email, otp) → get hash from Redis → pwd_context.verify → delete key on match (single-use)
+
+ oauth_service.py (pure httpx, no OAuth library)
+ - get_google_authorization_url() → generate CSRF state → store in Redis 10min → return (url, state)
+ - exchange_google_code(code, state) → verify state → POST token exchange → GET userinfo → return {id, email, name}
+ - Same pattern for LinkedIn (uses /v2/me + /v2/emailAddress)
+
+ artifact_service.py (called via FastAPI BackgroundTasks)
+ - validate_artifact(artifact_id, db):
+   a. Set status=in_progress
+   b. httpx.AsyncClient HEAD request → check 200, follow redirects
+   c. If github_repo type → delegate to github_service.get_repo_signals(url)
+   d. Build validation_details JSON
+   e. Set status=passed/failed
+   f. Call _check_badge_2_eligibility(user_id, db) — if all artifacts passed + profiles present → set badge_2=True + is_publicly_searchable=True
+
+ github_service.py
+ - get_repo_signals(github_url) → parse owner/repo → GET api.github.com/repos/{owner}/{repo} →
+ return {stars, last_push_date, recency_days, commits_count_estimate, language}
+ - Uses Authorization: token {GITHUB_TOKEN} header if configured
+
+ confidence_engine.py
+ Weighted scoring algorithm (total = 100):
+
+ ┌──────────────────────────────┬────────┬──────────────────────────────────────────────────────┐
+ │            Signal            │ Weight │                  Verified Condition                  │
+ ├──────────────────────────────┼────────┼──────────────────────────────────────────────────────┤
+ │ RAG capability               │ 15     │ github_repo artifact contains RAG keywords in README │
+ ├──────────────────────────────┼────────┼──────────────────────────────────────────────────────┤
+ │ Agent systems                │ 15     │ github_repo has relevant deps                        │
+ ├──────────────────────────────┼────────┼──────────────────────────────────────────────────────┤
+ │ Tool orchestration           │ 10     │ declared + artifact present                          │
+ ├──────────────────────────────┼────────┼──────────────────────────────────────────────────────┤
+ │ Memory systems               │ 10     │ declared + artifact present                          │
+ ├──────────────────────────────┼────────┼──────────────────────────────────────────────────────┤
+ │ GitHub activity (stars ≥ 10) │ 10     │ from github_service signals                          │
+ ├──────────────────────────────┼────────┼──────────────────────────────────────────────────────┤
+ │ GitHub recency (< 180 days)  │ 10     │ from github_service signals                          │
+ ├──────────────────────────────┼────────┼──────────────────────────────────────────────────────┤
+ │ Multiple artifacts (≥ 2)     │ 10     │ count of passed artifacts                            │
+ ├──────────────────────────────┼────────┼──────────────────────────────────────────────────────┤
+ │ LinkedIn verified            │ 10     │ profile URL accessible                               │
+ ├──────────────────────────────┼────────┼──────────────────────────────────────────────────────┤
+ │ Deployment type declared     │ 5      │ any value present                                    │
+ ├──────────────────────────────┼────────┼──────────────────────────────────────────────────────┤
+ │ Frameworks declared (≥ 2)    │ 5      │ len(frameworks) >= 2                                 │
+ └──────────────────────────────┴────────┴──────────────────────────────────────────────────────┘
+
+ Tier assignment: Bronze (0–39), Silver (40–69), Gold (70–100)
+
+ compute_score(user_id, declaration, artifacts) → returns {score, tier, verified_capabilities, declared_capabilities}
+
+ capability_doc.py
+ - generate_capability_document(user, declaration, score_result) → calls Claude API
+ - Prompt structure:
+ System: You are Syncscore's capability document generator. Generate a structured
+ professional profile for an AI service producer based on verified signals.
+
+ User: Producer details:
+ - Entity type: {entity_type}
+ - Declared capabilities: {...}
+ - Verified capabilities: {verified_capabilities}
+ - Confidence score: {score}/100, Tier: {tier}
+ - Proof artifacts: {artifact_types and urls}
+ - Frameworks: {frameworks}
+
+ Generate a JSON response with keys:
+ "narrative" (2-3 paragraph professional description),
+ "positioning" (1 sentence positioning statement),
+ "focus_industries" (list of 3-5 relevant industries)
+ - Parse JSON from response → populate CapabilityDocument fields
+ - Store raw_llm_output for auditability
+
+ ---
+ Phase 5 — API Endpoints
+
+ api/v1/auth.py
+ POST /auth/register              → create user (inactive), generate+send OTP
+ POST /auth/verify-otp            → verify OTP → set is_active=True, badge_1=True → return tokens
+ GET  /auth/oauth/{provider}      → return {authorization_url}
+ GET  /auth/oauth/{provider}/callback → exchange code → upsert user → return tokens
+ POST /auth/login                 → verify password → return tokens
+ POST /auth/token/refresh         → validate refresh token → return new access token
+
+ api/v1/presence.py (requires badge_1)
+ POST /presence/profiles          → save linkedin_url + github_url on User
+ POST /presence/artifacts         → create ProofArtifact (status=pending) → enqueue background validation
+ GET  /presence/artifacts         → list all artifacts for current user
+ GET  /presence/artifacts/{id}/status → poll validation status
+ POST /presence/verify            → manually re-trigger Badge 2 check (if all artifacts passed)
+
+ api/v1/capability.py (requires badge_2)
+ POST /capability/declaration     → upsert CapabilityDeclaration
+ GET  /capability/declaration     → get current declaration
+ POST /capability/document/generate → run confidence_engine + call capability_doc.py →
+                                     create/update CapabilityDocument → set badge_3=True
+ GET  /capability/document        → return CapabilityDocument
+ PATCH /capability/document       → update ONLY narrative/positioning/focus_industries
+
+ api/v1/execution.py (requires badge_3)
+ GET  /execution/challenge        → stub: return placeholder challenge info
+ POST /execution/submit           → stub: return {"status": "not_implemented"}
+
+ api/v1/router.py — APIRouter prefix /api/v1, includes all sub-routers
+
+ app/main.py
+ - lifespan context manager: verify DB connection + Redis ping on startup
+ - Include v1.router
+ - CORS middleware (allow frontend URL from settings)
+ - Exception handlers for HTTPException + generic 500
+
+ ---
+ Phase 6 — Tests
+
+ tests/test_auth.py
+ - Register → check 201, user in DB
+ - Verify OTP → check tokens returned, badge_1=True
+ - Login → check tokens
+ - Protected route without token → 401
+
+ tests/test_presence.py
+ - Submit profiles → check saved
+ - Submit artifact → check status=pending
+ - Mock artifact_service.validate_artifact → simulate pass → check badge_2=True
+
+ tests/test_capability.py
+ - Submit declaration (requires badge_2) → check saved
+ - Mock confidence_engine + capability_doc → trigger generation → check badge_3=True
+ - PATCH document narrative → check updated
+ - Attempt to PATCH confidence_score → 422 (schema rejection)
+
+ Use pytest-asyncio, httpx.AsyncClient as test client, in-memory SQLite for tests
+ (swap DATABASE_URL in test config).
+
+ ---
+ Verification (End-to-End)
+
+ 1. docker-compose up -d → Postgres + Redis up
+ 2. alembic upgrade head → tables created
+ 3. uvicorn app.main:app --reload
+ 4. Hit POST /api/v1/auth/register → get OTP in logs (dev mode prints to console)
+ 5. POST /api/v1/auth/verify-otp → get JWT
+ 6. POST /api/v1/presence/profiles + POST /api/v1/presence/artifacts → submit GitHub repo URL
+ 7. Poll GET /presence/artifacts/{id}/status → should reach passed
+ 8. GET /producers/me → is_publicly_searchable=True, badge_2=True
+ 9. POST /capability/declaration → submit capabilities
+ 10. POST /capability/document/generate → Capability Document returned with score + tier
+ 11. GET /api/v1/execution/challenge → stub response
+ 12. Run pytest tests/ → all green
