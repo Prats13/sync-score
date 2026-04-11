@@ -1,0 +1,374 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "Sync-Score API",
+    "description": "Badge-based onboarding and trust scoring system for AI service providers.\n\nToken flow helpers:\n- Completing signup or logging in auto-saves `accessToken` and `refreshToken` to the active environment.\n- Verifying an email OTP auto-saves `signupToken`.\n- `GET /me` uses the saved `accessToken` automatically.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Actuator health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "health"]
+            }
+          }
+        },
+        {
+          "name": "Auth health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Email Signup",
+      "item": [
+        {
+          "name": "Check email status",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/email/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "email", "status"]
+            },
+            "description": "Returns whether the email is known and the account status (PENDING_PROFILE, ACTIVE, DISABLED)."
+          }
+        },
+        {
+          "name": "Start signup (send OTP)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/signup/email/start",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "signup", "email", "start"]
+            },
+            "description": "Sends a 6-digit OTP to the given email. On local dev the OTP is logged to server stdout."
+          }
+        },
+        {
+          "name": "Resend OTP",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/signup/email/resend-otp",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "signup", "email", "resend-otp"]
+            },
+            "description": "Same as start, but rate-limited (429) if called within the cooldown window (default 60 s)."
+          }
+        },
+        {
+          "name": "Verify OTP → signup token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const body = pm.response.json();",
+                  "    pm.environment.set('signupToken', body.signupToken);",
+                  "    console.log('signupToken saved');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"otp\": \"{{otp}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/signup/email/verify-otp",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "signup", "email", "verify-otp"]
+            },
+            "description": "Verifies the OTP and returns a short-lived signup token (15 min). The `signupToken` variable is auto-saved on success."
+          }
+        },
+        {
+          "name": "Complete signup → token pair",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const body = pm.response.json();",
+                  "    pm.environment.set('accessToken', body.accessToken);",
+                  "    pm.environment.set('refreshToken', body.refreshToken);",
+                  "    console.log('accessToken + refreshToken saved');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{signupToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/signup/complete",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "signup", "complete"]
+            },
+            "description": "Requires the signup token in the Authorization header (not an access token). Sets username + password and returns a full token pair. `accessToken` and `refreshToken` are auto-saved on success."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Google Auth",
+      "item": [
+        {
+          "name": "Start signup with Google → signup token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const body = pm.response.json();",
+                  "    pm.environment.set('signupToken', body.signupToken);",
+                  "    console.log('signupToken saved');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idToken\": \"{{googleIdToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/signup/google",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "signup", "google"]
+            },
+            "description": "Exchange a Google id_token for a signup token. Returns 400 if APP_GOOGLE_CLIENT_ID is not configured on the server."
+          }
+        },
+        {
+          "name": "Login with Google → token pair",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const body = pm.response.json();",
+                  "    pm.environment.set('accessToken', body.accessToken);",
+                  "    pm.environment.set('refreshToken', body.refreshToken);",
+                  "    console.log('accessToken + refreshToken saved');",
+                  "} else if (pm.response.code === 409) {",
+                  "    const body = pm.response.json();",
+                  "    if (body.signupToken) {",
+                  "        pm.environment.set('signupToken', body.signupToken);",
+                  "        console.log('Signup incomplete — signupToken saved. Call /signup/complete next.');",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idToken\": \"{{googleIdToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login/google",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "login", "google"]
+            },
+            "description": "Returns token pair for active users. If signup is incomplete, returns 409 with a signupToken (auto-saved) — call /signup/complete next."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Login",
+      "item": [
+        {
+          "name": "Login (username + password)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const body = pm.response.json();",
+                  "    pm.environment.set('accessToken', body.accessToken);",
+                  "    pm.environment.set('refreshToken', body.refreshToken);",
+                  "    console.log('accessToken + refreshToken saved');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "login"]
+            },
+            "description": "`accessToken` and `refreshToken` are auto-saved on success."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Token",
+      "item": [
+        {
+          "name": "Refresh tokens",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const body = pm.response.json();",
+                  "    pm.environment.set('accessToken', body.accessToken);",
+                  "    pm.environment.set('refreshToken', body.refreshToken);",
+                  "    console.log('accessToken + refreshToken rotated and saved');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/token/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "token", "refresh"]
+            },
+            "description": "Rotates the refresh token (old one is revoked). Both `accessToken` and `refreshToken` are auto-updated on success."
+          }
+        },
+        {
+          "name": "Logout (revoke refresh token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    pm.environment.unset('accessToken');",
+                  "    pm.environment.unset('refreshToken');",
+                  "    console.log('Tokens cleared from environment');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "logout"]
+            },
+            "description": "Revokes the refresh token server-side. Clears `accessToken` and `refreshToken` from the environment on success."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "item": [
+        {
+          "name": "Get current user (me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "me"]
+            },
+            "description": "Returns userId, username, and roles for the authenticated user. Uses the `accessToken` environment variable."
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "description": "Overridden by the active environment"
+    }
+  ]
+}

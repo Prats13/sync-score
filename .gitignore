@@ -1,0 +1,13 @@
+.idea/
+*.iml
+.vscode/
+
+target/
+*.log
+
+.m2/
+
+.DS_Store
+
+*.md
+
