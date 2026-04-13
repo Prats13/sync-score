@@ -344,6 +344,61 @@
       ]
     },
     {
+      "name": "Badge 2 — Presence",
+      "item": [
+        {
+          "name": "Submit profile URLs",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"linkedinUrl\": \"https://www.linkedin.com/company/your-company\",\n  \"githubUrl\": \"https://github.com/your-org\",\n  \"websiteUrl\": \"https://your-company.com\",\n  \"liveProjectUrl\": \"https://app.your-company.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/producer/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "producer", "profile"]
+            },
+            "description": "Submit or update company profile URLs. `githubUrl` is optional. Resets badge status to PENDING on update."
+          }
+        },
+        {
+          "name": "Get profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/producer/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "producer", "profile"]
+            },
+            "description": "Get the current user's producer profile, badge status, and last verification results."
+          }
+        },
+        {
+          "name": "Verify profile → Badge 2",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/producer/profile/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "producer", "profile", "verify"]
+            },
+            "description": "Runs HTTP reachability checks on all submitted URLs. Returns badge2Status: VERIFIED if all required URLs are reachable, FAILED otherwise. Re-runnable after fixing URLs."
+          }
+        }
+      ]
+    },
+    {
       "name": "Profile",
       "item": [
         {
