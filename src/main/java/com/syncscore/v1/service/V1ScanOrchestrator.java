@@ -44,6 +44,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import com.syncscore.v2.service.ScanCompletedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -172,9 +173,11 @@ public class V1ScanOrchestrator {
         scanEventRepo.save(event);
         markLatestSubmission(event.getAgencyId(), SubmissionStatus.PROCESSED);
 
-        int packageCount = computation.scored.detectedPackages().size();
+        int packageCount = computation.scored().detectedPackages().size();
         int highTierNewCount = 0;
-        eventPublisher.publishEvent(new com.syncscore.v2.service.ScanCompletedEvent(
+        // NOTE: V2 listener MUST use @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+        // so it fires after this V1 transaction commits, not inside it.
+        eventPublisher.publishEvent(new ScanCompletedEvent(
                 event.getId(), event.getAgencyId(), packageCount, highTierNewCount));
     }
 
