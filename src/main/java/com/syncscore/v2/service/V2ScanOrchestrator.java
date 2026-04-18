@@ -1,8 +1,6 @@
 package com.syncscore.v2.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.syncscore.v2.domain.ArchConfidence;
-import com.syncscore.v2.domain.ArchStatus;
 import com.syncscore.v2.domain.ArchitectureReviewCase;
 import com.syncscore.v2.domain.ArchitectureScan;
 import com.syncscore.v2.domain.ArchScanStructuralSignal;
@@ -15,13 +13,10 @@ import com.syncscore.v2.scoring.AntiGamingEvaluator;
 import com.syncscore.v2.scoring.SignalScore;
 import com.syncscore.v2.scoring.V2ConfidenceScorer;
 import com.syncscore.v1.repo.AgencyProfileRepository;
-import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,9 +98,9 @@ public class V2ScanOrchestrator {
                 .map(this::loadPriorSignals)
                 .orElse(new StructuralSignalAggregator.AggregatedSignals(0, 0, 0, 0, 0, 0));
 
-        int recentCommits30d = signals.totalCommits90d() > 0 ? signals.totalCommits90d() : 0;
+        int recentCommits90d = signals.totalCommits90d() > 0 ? signals.totalCommits90d() : 0;
         AntiGamingEvaluator.Result antiGaming = antiGamingEvaluator.evaluate(
-                priorSignals, signals, newHighTierPackages, recentCommits30d);
+                priorSignals, signals, newHighTierPackages, recentCommits90d);
 
         V2ConfidenceScorer.Result scored = confidenceScorer.score(signals, antiGaming.fired());
 
