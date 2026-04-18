@@ -8,7 +8,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -17,22 +16,16 @@ public class V2StructuralScanner {
 
     private final GitHubApiClient gitHubApi;
     private final GitHubScanProperties props;
-    private final CommitActivityAnalyzer commitAnalyzer;
     private final FolderStructureAnalyzer folderAnalyzer;
-    private final ManifestConsistencyChecker consistencyChecker;
     private final StructuralSignalAggregator aggregator;
 
     public V2StructuralScanner(GitHubApiClient gitHubApi,
                                GitHubScanProperties props,
-                               CommitActivityAnalyzer commitAnalyzer,
                                FolderStructureAnalyzer folderAnalyzer,
-                               ManifestConsistencyChecker consistencyChecker,
                                StructuralSignalAggregator aggregator) {
         this.gitHubApi = gitHubApi;
         this.props = props;
-        this.commitAnalyzer = commitAnalyzer;
         this.folderAnalyzer = folderAnalyzer;
-        this.consistencyChecker = consistencyChecker;
         this.aggregator = aggregator;
     }
 
@@ -41,6 +34,7 @@ public class V2StructuralScanner {
         int limit = Math.min(repos.size(), props.repoScanDefaultLimit());
 
         List<RepoStructuralSignals> repoSignals = new ArrayList<>();
+        Instant since90d = Instant.now().minus(90, ChronoUnit.DAYS);
 
         for (RepoSummary repo : repos.subList(0, limit)) {
             if (repo == null || repo.owner() == null || !StringUtils.hasText(repo.owner().login())) continue;
@@ -54,7 +48,6 @@ public class V2StructuralScanner {
 
             FolderStructureAnalyzer.Result folderResult = folderAnalyzer.analyze(treeItems);
 
-            Instant since90d = Instant.now().minus(90, ChronoUnit.DAYS);
             int commitCount = gitHubApi.listCommitCount(owner, name, since90d);
             int contributorCount = gitHubApi.listContributorCount(owner, name);
 
