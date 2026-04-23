@@ -56,6 +56,19 @@ const RISK_THRESHOLDS = {
   lowOverall: (score: number) => score < 30,
 }
 
+const ARCH_STATUS_LABELS: Record<string, string> = {
+  VERIFIED:          "Architecture Verified",
+  UNDER_REVIEW:      "Under Review",
+  EVIDENCE_MISMATCH: "Evidence Mismatch",
+  FRESHNESS_LOW:     "Freshness Low",
+}
+
+const ARCH_CONFIDENCE_LABELS: Record<string, string> = {
+  HIGH:   "High confidence",
+  MEDIUM: "Medium confidence",
+  LOW:    "Low confidence",
+}
+
 export default async function BuyerReportPage({ params }: Props) {
   const { slug } = await params
 
@@ -119,12 +132,12 @@ export default async function BuyerReportPage({ params }: Props) {
                 ? "bg-red-50 text-red-600"
                 : "bg-amber-50 text-amber-700",
             ].join(" ")}>
-              {archProfile.archStatus.replace("_", " ")}
+              {ARCH_STATUS_LABELS[archProfile.archStatus] ?? archProfile.archStatus.replace(/_/g, " ")}
             </span>
           )}
           {archProfile?.confidence && (
             <span className="rounded-full border-2 border-[#D7D3CB] px-3 py-1 text-xs font-medium text-[#6B6B6B]">
-              {archProfile.confidence} confidence
+              {ARCH_CONFIDENCE_LABELS[archProfile.confidence] ?? archProfile.confidence}
             </span>
           )}
           {score.totalScore != null && (

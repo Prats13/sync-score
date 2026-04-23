@@ -149,7 +149,8 @@ export default function VerifyArchitecturePage() {
     }, 600)
 
     try {
-      const result = await architectureApi.triggerScan()
+      const checkedExclusions = exclusions.filter((e) => e.checked).map((e) => e.id)
+      const result = await architectureApi.triggerScan(source ?? undefined, checkedExclusions, customExclusions)
       setScanResult(result)
       setTimeout(() => setStep(5), EXTRACTION_LINES.length * 600 + 400)
     } catch (e) {

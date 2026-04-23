@@ -3,6 +3,7 @@ package com.syncscore.v2.api;
 import com.syncscore.security.AccessPrincipal;
 import com.syncscore.v1.repo.AgencyProfileRepository;
 import com.syncscore.v2.api.dto.ArchitectureScanResponse;
+import com.syncscore.v2.api.dto.ConfidentialScanRequest;
 import com.syncscore.v2.domain.ArchitectureScan;
 import com.syncscore.v2.repo.ArchitectureScanRepository;
 import com.syncscore.v2.service.V2ScanAsyncBridge;
@@ -10,9 +11,11 @@ import com.syncscore.v2.service.V2ScanOrchestrator;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -38,11 +41,16 @@ public class V2ScanController {
     }
 
     @PostMapping("/trigger")
-    public ArchitectureScanResponse triggerScan(@AuthenticationPrincipal AccessPrincipal principal) {
+    public ArchitectureScanResponse triggerScan(
+            @AuthenticationPrincipal AccessPrincipal principal,
+            @RequestBody(required = false) ConfidentialScanRequest request) {
         var agency = agencyRepo.findByUserId(principal.userId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Agency profile not found"));
 
-        UUID archScanId = orchestrator.createQueuedScan(agency.getId(), null);
+        UUID archScanId = (request != null && StringUtils.hasText(request.source()))
+                ? orchestrator.createConfidentialScan(agency.getId(), request)
+                : orchestrator.createQueuedScan(agency.getId(), null);
+
         asyncBridge.runAsync(archScanId, agency.getId(), 0, 0);
 
         ArchitectureScan scan = archScanRepo.findById(archScanId)

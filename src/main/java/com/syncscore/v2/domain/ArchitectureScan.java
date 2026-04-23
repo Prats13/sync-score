@@ -110,4 +110,5 @@ public class ArchitectureScan {
 
     public void setStructuralSignalsJson(JsonNode node) { this.structuralSignalsJson = node; }
     public void setSummaryJson(JsonNode node) { this.summaryJson = node; }
+    public void setEvidenceSource(String evidenceSource) { this.evidenceSource = evidenceSource; }
 }

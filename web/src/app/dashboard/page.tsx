@@ -24,6 +24,33 @@ function formatDate(iso: string) {
   })
 }
 
+const TRIGGER_LABELS: Record<string, string> = {
+  GITHUB_SCAN:  "GitHub scan",
+  PASTE_SCAN:   "Paste upload",
+  RESCAN:       "Rescan",
+}
+
+const ARCH_STATUS_LABELS: Record<string, { text: string; color: string }> = {
+  VERIFIED:          { text: "Architecture Verified",  color: "text-[#279455]" },
+  UNDER_REVIEW:      { text: "Under Review",           color: "text-amber-600" },
+  EVIDENCE_MISMATCH: { text: "Evidence Mismatch",      color: "text-red-500"   },
+  FRESHNESS_LOW:     { text: "Freshness Low",          color: "text-[#6B6B6B]" },
+}
+
+const ARCH_CONFIDENCE_LABELS: Record<string, string> = {
+  HIGH:   "High",
+  MEDIUM: "Medium",
+  LOW:    "Low",
+}
+
+const EVIDENCE_SOURCE_LABELS: Record<string, string> = {
+  GITHUB_PUBLIC:        "Public GitHub",
+  CONFIDENTIAL_GITHUB:  "Confidential GitHub",
+  CONFIDENTIAL_SESSION: "Confidential Session",
+  MIXED_EVIDENCE:       "Mixed Evidence",
+  PASTE:                "Paste Upload",
+}
+
 export default function DashboardPage() {
   const router = useRouter()
   const { isAuthenticated, isLoading: authLoading } = useAuth()
@@ -251,24 +278,24 @@ export default function DashboardPage() {
                   : archProfile.confidence === "MEDIUM" ? "text-amber-600"
                   : "text-[#6B6B6B]",
                 ].join(" ")}>
-                  {archProfile.confidence ?? "—"}
+                  {archProfile.confidence ? ARCH_CONFIDENCE_LABELS[archProfile.confidence] ?? archProfile.confidence : "—"}
                 </p>
               </div>
               <div className="rounded-xl border-2 border-[#D7D3CB] bg-white p-3 text-center">
                 <p className="text-xs font-semibold uppercase tracking-widest text-[#6B6B6B]">Status</p>
                 <p className={[
                   "mt-1 text-xs font-bold",
-                  archProfile.archStatus === "VERIFIED" ? "text-[#279455]"
-                  : archProfile.archStatus === "EVIDENCE_MISMATCH" ? "text-red-500"
-                  : "text-amber-600",
+                  ARCH_STATUS_LABELS[archProfile.archStatus ?? ""]?.color ?? "text-amber-600",
                 ].join(" ")}>
-                  {archProfile.archStatus?.replace("_", " ") ?? "—"}
+                  {archProfile.archStatus ? (ARCH_STATUS_LABELS[archProfile.archStatus]?.text ?? archProfile.archStatus.replace(/_/g, " ")) : "—"}
                 </p>
               </div>
               <div className="rounded-xl border-2 border-[#D7D3CB] bg-white p-3 text-center">
                 <p className="text-xs font-semibold uppercase tracking-widest text-[#6B6B6B]">Source</p>
                 <p className="mt-1 text-xs font-bold text-[#000000]">
-                  {archProfile.evidenceSource || "—"}
+                  {archProfile.evidenceSource
+                    ? (EVIDENCE_SOURCE_LABELS[archProfile.evidenceSource] ?? archProfile.evidenceSource.replace(/_/g, " "))
+                    : "—"}
                 </p>
               </div>
             </div>
@@ -320,7 +347,7 @@ export default function DashboardPage() {
                       ].join(" ")}
                     />
                     <span className="text-sm font-medium text-[#000000]">
-                      {s.triggerType.replace("_", " ").toLowerCase()}
+                      {TRIGGER_LABELS[s.triggerType] ?? s.triggerType.replace(/_/g, " ").toLowerCase()}
                     </span>
                     <TrustLabel label={s.verificationLabel} className="text-[10px]" />
                   </div>

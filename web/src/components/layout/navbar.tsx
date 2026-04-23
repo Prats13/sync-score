@@ -41,6 +41,11 @@ export function Navbar() {
               <Button asChild size="sm" variant="outline">
                 <Link href="/dashboard">Dashboard</Link>
               </Button>
+              <Button asChild size="sm" variant="ghost">
+                <Link href="/admin/review-cases" className="text-[#6B6B6B] hover:text-[#000000]">
+                  Admin
+                </Link>
+              </Button>
               <Button
                 size="sm"
                 variant="ghost"

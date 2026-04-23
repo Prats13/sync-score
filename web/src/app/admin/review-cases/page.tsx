@@ -23,7 +23,7 @@ function TriggerDetails({ details }: { details: unknown }) {
       {Object.entries(d).map(([k, v]) => (
         <div key={k} className="flex gap-2">
           <dt className="w-36 shrink-0 font-medium text-[#6B6B6B]">{k.replace(/_/g, " ")}</dt>
-          <dd className="text-[#000000]">{String(v)}</dd>
+          <dd className="text-[#000000]">{v !== null && v !== undefined ? String(v) : "—"}</dd>
         </div>
       ))}
     </dl>
@@ -36,6 +36,21 @@ const STRUCTURAL_SIGNALS = [
   "Observability claims not supported by visible evidence",
   "Manifest edited within 1 hr of rescan trigger",
 ]
+
+const TRIGGER_REASON_LABELS: Record<string, string> = {
+  SCORE_JUMP_LARGE:              "Score jumped more than 20 pts",
+  HIGH_TIER_NO_COMMIT_ACTIVITY:  "High-tier libs added, no commit activity",
+  OBSERVABILITY_NO_EVIDENCE:     "Observability claimed but no evidence",
+  RAPID_MANIFEST_EDIT:           "Manifest edited just before rescan",
+  ANTI_GAMING_FLAG:              "Anti-gaming heuristic triggered",
+  MANUAL_FLAG:                   "Manually flagged by admin",
+}
+
+const CASE_STATUS_META: Record<string, { label: string; chip: string }> = {
+  OPEN:      { label: "Open",     chip: "bg-amber-100 text-amber-700" },
+  APPROVED:  { label: "Approved", chip: "bg-[#EBFFF2] text-[#279455]" },
+  DISMISSED: { label: "Dismissed",chip: "bg-[#F6F6F3] text-[#6B6B6B]" },
+}
 
 export default function AdminReviewCasesPage() {
   const [cases, setCases] = useState<ReviewCaseResponse[]>([])
@@ -129,12 +144,17 @@ export default function AdminReviewCasesPage() {
                 ].join(" ")}
               >
                 <div className="flex items-start justify-between gap-2">
-                  <span className="inline-block rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase text-amber-700">
-                    ⚑ Flag
+                  <span className={[
+                    "inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase",
+                    CASE_STATUS_META[c.status]?.chip ?? "bg-amber-100 text-amber-700",
+                  ].join(" ")}>
+                    {CASE_STATUS_META[c.status]?.label ?? c.status}
                   </span>
                   <span className="text-[10px] text-[#6B6B6B]">{formatDate(c.createdAt)}</span>
                 </div>
-                <p className="mt-2 text-sm font-medium text-[#000000] line-clamp-2">{c.triggerReason}</p>
+                <p className="mt-2 text-sm font-medium text-[#000000] line-clamp-2">
+                  {TRIGGER_REASON_LABELS[c.triggerReason] ?? c.triggerReason.replace(/_/g, " ")}
+                </p>
                 <p className="mt-1 text-[10px] text-[#6B6B6B]">Agency {c.agencyId.slice(0, 8)}…</p>
               </button>
             ))
@@ -156,7 +176,9 @@ export default function AdminReviewCasesPage() {
                     <span className="text-xs font-semibold uppercase tracking-widest text-amber-700">
                       ⚑ Anti-gaming flag
                     </span>
-                    <p className="mt-1 text-lg font-semibold text-[#000000]">{selected.triggerReason}</p>
+                    <p className="mt-1 text-lg font-semibold text-[#000000]">
+                      {TRIGGER_REASON_LABELS[selected.triggerReason] ?? selected.triggerReason.replace(/_/g, " ")}
+                    </p>
                   </div>
                   <span className="shrink-0 text-xs text-[#6B6B6B]">{formatDate(selected.createdAt)}</span>
                 </div>
@@ -168,7 +190,7 @@ export default function AdminReviewCasesPage() {
               </div>
 
               {/* Score jump / trigger details */}
-              {selected.triggerDetailsJson && (
+              {Boolean(selected.triggerDetailsJson) && (
                 <div className="rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-5">
                   <h3 className="mb-3 text-sm font-semibold text-[#000000]">Score jump analysis</h3>
                   <TriggerDetails details={selected.triggerDetailsJson} />

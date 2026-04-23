@@ -3,6 +3,14 @@ import type { ArchConfidence, ArchStatus, VerificationLabel } from "@/lib/types"
 import { ScoreBadge } from "@/components/ui/score-badge"
 import { TrustLabel } from "@/components/ui/trust-label"
 
+const EVIDENCE_SOURCE_LABELS: Record<string, string> = {
+  GITHUB_PUBLIC:        "Public GitHub",
+  CONFIDENTIAL_GITHUB:  "Confidential GitHub",
+  CONFIDENTIAL_SESSION: "Confidential Session",
+  MIXED_EVIDENCE:       "Mixed Evidence",
+  PASTE:                "Paste Upload",
+}
+
 function chipForArch(confidence: ArchConfidence | null | undefined) {
   if (!confidence) return { label: "ARCH —", className: "border-[#D7D3CB] text-[#6B6B6B]" }
   if (confidence === "HIGH") return { label: "ARCH HIGH", className: "border-[#2ECC71] text-[#279455]" }
@@ -64,7 +72,7 @@ export function UnifiedTrustCard({
           <div className="flex flex-wrap justify-end gap-2 text-[10px] font-medium text-[#6B6B6B]">
             {evidenceSource && (
               <span className="rounded-full border border-[#D7D3CB] bg-white px-2 py-1">
-                {evidenceSource.replace(/_/g, " ")}
+                {EVIDENCE_SOURCE_LABELS[evidenceSource] ?? evidenceSource.replace(/_/g, " ")}
               </span>
             )}
             {freshnessLabel && (

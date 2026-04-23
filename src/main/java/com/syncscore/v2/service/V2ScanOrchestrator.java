@@ -1,13 +1,16 @@
 package com.syncscore.v2.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.syncscore.v2.api.dto.ConfidentialScanRequest;
 import com.syncscore.v2.domain.ArchStatus;
 import com.syncscore.v2.domain.ArchitectureReviewCase;
 import com.syncscore.v2.domain.ArchitectureScan;
 import com.syncscore.v2.domain.ArchScanStructuralSignal;
+import com.syncscore.v2.domain.ConfidentialScanSession;
 import com.syncscore.v2.repo.ArchitectureReviewCaseRepository;
 import com.syncscore.v2.repo.ArchitectureScanRepository;
 import com.syncscore.v2.repo.ArchScanStructuralSignalRepository;
+import com.syncscore.v2.repo.ConfidentialScanSessionRepository;
 import com.syncscore.v2.scanner.StructuralSignalAggregator;
 import com.syncscore.v2.scanner.V2StructuralScanner;
 import com.syncscore.v2.scoring.AntiGamingEvaluator;
@@ -36,6 +39,7 @@ public class V2ScanOrchestrator {
     private final ArchitectureScanRepository archScanRepo;
     private final ArchScanStructuralSignalRepository signalRepo;
     private final ArchitectureReviewCaseRepository reviewCaseRepo;
+    private final ConfidentialScanSessionRepository sessionRepo;
     private final AgencyProfileRepository agencyRepo;
     private final V2StructuralScanner structuralScanner;
     private final V2ConfidenceScorer confidenceScorer;
@@ -47,6 +51,7 @@ public class V2ScanOrchestrator {
             ArchitectureScanRepository archScanRepo,
             ArchScanStructuralSignalRepository signalRepo,
             ArchitectureReviewCaseRepository reviewCaseRepo,
+            ConfidentialScanSessionRepository sessionRepo,
             AgencyProfileRepository agencyRepo,
             V2StructuralScanner structuralScanner,
             V2ConfidenceScorer confidenceScorer,
@@ -56,6 +61,7 @@ public class V2ScanOrchestrator {
         this.archScanRepo = archScanRepo;
         this.signalRepo = signalRepo;
         this.reviewCaseRepo = reviewCaseRepo;
+        this.sessionRepo = sessionRepo;
         this.agencyRepo = agencyRepo;
         this.structuralScanner = structuralScanner;
         this.confidenceScorer = confidenceScorer;
@@ -81,6 +87,35 @@ public class V2ScanOrchestrator {
         UUID id = archScanRepo.save(scan).getId();
         log.info("event=ARCH_SCAN_QUEUED archScanId={} agencyId={}", id, agencyId);
         return id;
+    }
+
+    @Transactional
+    public UUID createConfidentialScan(UUID agencyId, ConfidentialScanRequest request) {
+        String evidenceSource = toEvidenceSource(request.source());
+        ArchitectureScan scan = new ArchitectureScan(agencyId, null, RULESET_VERSION);
+        scan.setEvidenceSource(evidenceSource);
+        UUID id = archScanRepo.save(scan).getId();
+
+        ConfidentialScanSession session = new ConfidentialScanSession(
+                agencyId, id, request.source(),
+                objectMapper.valueToTree(request.exclusions() != null ? request.exclusions() : java.util.List.of()),
+                request.customExclusions()
+        );
+        sessionRepo.save(session);
+
+        log.info("event=CONFIDENTIAL_SCAN_QUEUED archScanId={} agencyId={} source={}", id, agencyId, request.source());
+        return id;
+    }
+
+    private static String toEvidenceSource(String source) {
+        return switch (source == null ? "" : source.toLowerCase()) {
+            case "github"    -> "CONFIDENTIAL_GITHUB";
+            case "agent"     -> "CONFIDENTIAL_AGENT";
+            case "docs"      -> "CONFIDENTIAL_DOCS";
+            case "export"    -> "CONFIDENTIAL_EXPORT";
+            case "interview" -> "CONFIDENTIAL_INTERVIEW";
+            default          -> "CONFIDENTIAL_MIXED";
+        };
     }
 
     @Transactional
