@@ -1,6 +1,7 @@
 package com.syncscore.v2.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.syncscore.v2.domain.ArchStatus;
 import com.syncscore.v2.domain.ArchitectureReviewCase;
 import com.syncscore.v2.domain.ArchitectureScan;
 import com.syncscore.v2.domain.ArchScanStructuralSignal;
@@ -135,6 +136,14 @@ public class V2ScanOrchestrator {
             scan.markFailed(error);
             archScanRepo.save(scan);
             log.error("event=ARCH_SCAN_FAILED archScanId={} error={}", archScanId, error);
+        });
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void markFreshnessLow(UUID archScanId) {
+        archScanRepo.findById(archScanId).ifPresent(scan -> {
+            scan.markSucceeded(scan.getConfidence(), ArchStatus.FRESHNESS_LOW);
+            archScanRepo.save(scan);
         });
     }
 
