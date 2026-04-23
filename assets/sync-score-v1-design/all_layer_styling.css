@@ -1,0 +1,2258 @@
+/* Homepage for V1 */
+
+position: relative;
+width: 1440px;
+height: 2909px;
+
+background: #F7F6F2;
+
+
+/* Rectangle 11 */
+
+position: absolute;
+width: 199px;
+height: 41px;
+left: 609px;
+top: 536px;
+
+background: #10100F;
+border-radius: 11px;
+
+
+/* Setting the standard for AI agent trust */
+
+position: absolute;
+width: 1280px;
+height: 123px;
+left: 80px;
+top: 200px;
+
+font-family: 'DM Serif Text';
+font-style: normal;
+font-weight: 400;
+font-size: 60px;
+line-height: 67px;
+text-align: center;
+
+color: #000000;
+
+
+
+/* As AI agents enter core business operations, technical verification becomes non-negotiable. SyncScore audits and certifies AI agent architecture, so businesses deploy proof, not promises. */
+
+position: absolute;
+width: 858px;
+height: 112px;
+left: 278px;
+top: 372px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 25px;
+line-height: 148%;
+/* or 37px */
+text-align: center;
+letter-spacing: -0.06em;
+
+color: #6B6B6B;
+
+
+
+/* Unverified agents introduce risks you can’t see, making it difficult to understand what’s actually driving decisions in your system. */
+
+position: absolute;
+width: 1008px;
+height: 112px;
+left: 42px;
+top: 1262px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 25px;
+line-height: 148%;
+/* or 37px */
+letter-spacing: -0.06em;
+
+color: #6B6B6B;
+
+
+
+/* Get Started */
+
+position: absolute;
+width: 199px;
+height: 41px;
+left: 609px;
+top: 536px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 24px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #FFFFFF;
+
+
+
+/* Rectangle 104 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 199px;
+height: 51px;
+left: 253px;
+top: 1822px;
+
+background: #F6F6F3;
+border: 2px solid #D7D3CB;
+border-radius: 35px;
+
+
+/* NON-VERIFIED */
+
+position: absolute;
+width: 201px;
+height: 51px;
+left: 253px;
+top: 1822px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 557;
+font-size: 16px;
+line-height: 19px;
+display: flex;
+align-items: center;
+text-align: center;
+letter-spacing: 0.09em;
+
+color: #6B6B6B;
+font-variation-settings: 'slnt' 0;
+
+
+
+/* Rectangle 105 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 258px;
+height: 51px;
+left: 950px;
+top: 1822px;
+
+background: #EBFFF2;
+border: 2px solid #2ECC71;
+border-radius: 35px;
+
+
+/* SYNCSCORE VERIFIED */
+
+position: absolute;
+width: 240px;
+height: 51px;
+left: 968px;
+top: 1822px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 557;
+font-size: 16px;
+line-height: 19px;
+display: flex;
+align-items: center;
+text-align: center;
+letter-spacing: 0.09em;
+
+color: #279455;
+font-variation-settings: 'slnt' 0;
+
+
+
+/* Rectangle 92 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 648px;
+height: 397px;
+left: 42px;
+top: 1400px;
+
+background: #F6F6F3;
+border: 2px solid #D7D3CB;
+border-radius: 23px;
+
+
+/* Rectangle 97 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 648px;
+height: 397px;
+left: 753px;
+top: 1400px;
+
+background: #F6F6F3;
+border: 2px solid #D7D3CB;
+border-radius: 23px;
+
+
+/* Rectangle 90 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 99px;
+height: 99px;
+left: 306px;
+top: 1550px;
+
+background: #FFFFFF;
+border: 2px solid #D7D3CB;
+border-radius: 13px;
+
+
+/* Rectangle 91 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 14px;
+height: 14px;
+left: 339px;
+top: 1575px;
+
+background: #FFFFFF;
+border: 2.5px solid #6B6B6B;
+border-radius: 3px;
+
+
+/* Rectangle 94 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 14px;
+height: 14px;
+left: 358px;
+top: 1575px;
+
+background: #FFFFFF;
+border: 2.5px solid #6B6B6B;
+border-radius: 3px;
+
+
+/* Rectangle 92 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 14px;
+height: 14px;
+left: 339px;
+top: 1594px;
+
+background: #FFFFFF;
+border: 2.5px solid #6B6B6B;
+border-radius: 3px;
+
+
+/* Rectangle 93 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 14px;
+height: 14px;
+left: 358px;
+top: 1594px;
+
+background: #FFFFFF;
+border: 2.5px solid #6B6B6B;
+border-radius: 3px;
+
+
+/* Agent */
+
+position: absolute;
+width: 99px;
+height: 29px;
+left: 306px;
+top: 1608px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 600;
+font-size: 14px;
+line-height: 17px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #6B6B6B;
+
+
+
+/* Group 2 */
+
+position: absolute;
+width: 91px;
+height: 33px;
+left: 474.45px;
+top: 1481.14px;
+
+transform: rotate(-13.06deg);
+
+
+/* Rectangle 95 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 91px;
+height: 33px;
+left: 474.45px;
+top: 1481.14px;
+
+background: #FFFFFF;
+border: 2px dashed #D7D3CB;
+border-radius: 9px;
+transform: rotate(-13.06deg);
+
+
+/* Memory */
+
+position: absolute;
+width: 91px;
+height: 30px;
+left: 474.67px;
+top: 1482.12px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 17px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #AAAAAA;
+
+transform: rotate(-13.06deg);
+
+
+/* Group 1 */
+
+position: absolute;
+width: 91px;
+height: 33px;
+left: 137.04px;
+top: 1492.23px;
+
+transform: rotate(-0.38deg);
+
+
+/* Rectangle 96 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 91px;
+height: 33px;
+left: 137.04px;
+top: 1492.23px;
+
+background: #FFFFFF;
+border: 2px dashed #D7D3CB;
+border-radius: 9px;
+transform: rotate(-0.38deg);
+
+
+/* Guardrails */
+
+position: absolute;
+width: 91px;
+height: 32px;
+left: 137.05px;
+top: 1493.23px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 17px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #AAAAAA;
+
+transform: rotate(-0.38deg);
+
+
+/* Ellipse 31 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 251px;
+height: 251px;
+left: 945px;
+top: 1476px;
+
+background: radial-gradient(50% 50% at 50% 50%, #FFFFFF 57.96%, #D6F7E1 100%);
+border: 1.5px dashed #2ECC71;
+
+
+/* Verified Agent */
+
+position: absolute;
+width: 151px;
+height: 41px;
+left: 995px;
+top: 1604px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 600;
+font-size: 14px;
+line-height: 17px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #000000;
+
+
+
+/* Logo light mode 1 */
+
+position: absolute;
+width: 57px;
+height: 57px;
+left: 1042px;
+top: 1552px;
+
+background: url(Logo light mode.png);
+
+
+/* Rectangle 98 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 77px;
+height: 31px;
+left: 1146px;
+top: 1534px;
+
+background: #FFFFFF;
+border: 1px solid #2ECC71;
+border-radius: 9px;
+
+
+/* Memory */
+
+position: absolute;
+width: 77px;
+height: 28px;
+left: 1146px;
+top: 1535px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 17px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #000000;
+
+
+
+/* Rectangle 99 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 95px;
+height: 31px;
+left: 1023px;
+top: 1460px;
+
+background: #FFFFFF;
+border: 1px solid #2ECC71;
+border-radius: 9px;
+
+
+/* Guardrails */
+
+position: absolute;
+width: 95px;
+height: 28px;
+left: 1023px;
+top: 1461px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 17px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #000000;
+
+
+
+/* Rectangle 100 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 119px;
+height: 31px;
+left: 890px;
+top: 1532px;
+
+background: #FFFFFF;
+border: 1px solid #2ECC71;
+border-radius: 9px;
+
+
+/* Orchestration */
+
+position: absolute;
+width: 119px;
+height: 28px;
+left: 890px;
+top: 1533px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 17px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #000000;
+
+
+
+/* Rectangle 101 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 80px;
+height: 31px;
+left: 910px;
+top: 1645px;
+
+background: #FFFFFF;
+border: 1px solid #2ECC71;
+border-radius: 9px;
+
+
+/* Control */
+
+position: absolute;
+width: 80px;
+height: 28px;
+left: 910px;
+top: 1646px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 17px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #000000;
+
+
+
+/* Rectangle 102 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 106px;
+height: 31px;
+left: 1018px;
+top: 1711px;
+
+background: #FFFFFF;
+border: 1px solid #2ECC71;
+border-radius: 9px;
+
+
+/* Observability */
+
+position: absolute;
+width: 106px;
+height: 28px;
+left: 1018px;
+top: 1712px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 17px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #000000;
+
+
+
+/* Rectangle 103 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 125px;
+height: 31px;
+left: 1139px;
+top: 1645px;
+
+background: #FFFFFF;
+border: 1px solid #2ECC71;
+border-radius: 9px;
+
+
+/* Data & Retrieval */
+
+position: absolute;
+width: 125px;
+height: 28px;
+left: 1139px;
+top: 1646px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 17px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #000000;
+
+
+
+/* Group 3 */
+
+position: absolute;
+width: 115px;
+height: 33px;
+left: 502.62px;
+top: 1585.05px;
+
+transform: rotate(10.07deg);
+
+
+/* Rectangle 116 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 115px;
+height: 33px;
+left: 502.62px;
+top: 1585.05px;
+
+background: #FFFFFF;
+border: 2px dashed #D7D3CB;
+border-radius: 9px;
+transform: rotate(10.07deg);
+
+
+/* Logging */
+
+position: absolute;
+width: 115px;
+height: 30px;
+left: 502.97px;
+top: 1586.04px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 17px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #AAAAAA;
+
+transform: rotate(10.07deg);
+
+
+/* Group 6 */
+
+position: absolute;
+width: 121px;
+height: 33px;
+left: 332px;
+top: 1727px;
+
+transform: rotate(10.65deg);
+
+
+/* Rectangle 114 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 121px;
+height: 33px;
+left: 332px;
+top: 1727px;
+
+background: #FFFFFF;
+border: 2px dashed #D7D3CB;
+border-radius: 9px;
+transform: rotate(10.65deg);
+
+
+/* Orchestration */
+
+position: absolute;
+width: 121px;
+height: 30px;
+left: 332.37px;
+top: 1727.98px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 17px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #AAAAAA;
+
+transform: rotate(10.65deg);
+
+
+/* Group 7 */
+
+position: absolute;
+width: 91px;
+height: 33px;
+left: 161.79px;
+top: 1679.43px;
+
+transform: rotate(4.02deg);
+
+
+/* Rectangle 98 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 91px;
+height: 33px;
+left: 161.79px;
+top: 1679.43px;
+
+background: #FFFFFF;
+border: 2px dashed #D7D3CB;
+border-radius: 9px;
+transform: rotate(4.02deg);
+
+
+/* API Layer */
+
+position: absolute;
+width: 91px;
+height: 30px;
+left: 161.93px;
+top: 1680.43px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 17px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #AAAAAA;
+
+transform: rotate(4.02deg);
+
+
+/* Group 4 */
+
+position: absolute;
+width: 115px;
+height: 33px;
+left: 397px;
+top: 1667px;
+
+transform: rotate(-13.62deg);
+
+
+/* Rectangle 115 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 115px;
+height: 33px;
+left: 397px;
+top: 1667px;
+
+background: #FFFFFF;
+border: 2px dashed #D7D3CB;
+border-radius: 9px;
+transform: rotate(-13.62deg);
+
+
+/* Data Sources */
+
+position: absolute;
+width: 115px;
+height: 30px;
+left: 397.24px;
+top: 1667.97px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 17px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #AAAAAA;
+
+transform: rotate(-13.62deg);
+
+
+/* Group 5 */
+
+position: absolute;
+width: 115px;
+height: 33px;
+left: 294px;
+top: 1440px;
+
+transform: rotate(-10.06deg);
+
+
+/* Rectangle 117 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 115px;
+height: 33px;
+left: 294px;
+top: 1440px;
+
+background: #FFFFFF;
+border: 2px dashed #D7D3CB;
+border-radius: 9px;
+transform: rotate(-10.06deg);
+
+
+/* Security */
+
+position: absolute;
+width: 115px;
+height: 30px;
+left: 294.17px;
+top: 1440.98px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 17px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #AAAAAA;
+
+transform: rotate(-10.06deg);
+
+
+/* Group 8 */
+
+position: absolute;
+width: 121px;
+height: 33px;
+left: 83px;
+top: 1559px;
+
+transform: rotate(10.65deg);
+
+
+/* Rectangle 114 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 121px;
+height: 33px;
+left: 83px;
+top: 1559px;
+
+background: #FFFFFF;
+border: 2px dashed #D7D3CB;
+border-radius: 9px;
+transform: rotate(10.65deg);
+
+
+/* Error Handling */
+
+position: absolute;
+width: 121px;
+height: 30px;
+left: 83.37px;
+top: 1559.98px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 14px;
+line-height: 17px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #AAAAAA;
+
+transform: rotate(10.65deg);
+
+
+/* Line 20 */
+
+position: absolute;
+width: 5.93px;
+height: 13.08px;
+left: 966px;
+top: 1838px;
+
+border: 2px solid #279455;
+border-radius: 0.05px;
+transform: rotate(45deg);
+
+
+/* Header V2 Layout */
+
+position: absolute;
+width: 1440px;
+height: 89px;
+left: 0px;
+top: 0px;
+
+background: #F8F7F4;
+
+
+/* Header */
+
+position: absolute;
+width: 1440px;
+height: 89px;
+left: 1px;
+top: 0px;
+
+
+
+/* Rectangle 81 */
+
+position: absolute;
+width: 1440px;
+height: 89px;
+left: 1px;
+top: 0px;
+
+background: #F8F7F4;
+
+
+/* LMlogo */
+
+position: absolute;
+width: 137px;
+height: 24px;
+left: 55px;
+top: 32px;
+
+
+
+/* SyncScore */
+
+position: absolute;
+width: 109px;
+height: 21px;
+left: 83px;
+top: 33px;
+
+font-family: 'DM Serif Display';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 33px;
+display: flex;
+align-items: center;
+letter-spacing: -0.01em;
+
+color: #000000;
+
+
+
+/* Logo 3 */
+
+position: absolute;
+width: 24px;
+height: 24px;
+left: 55px;
+top: 32px;
+
+
+
+/* Rectangle 71 */
+
+position: absolute;
+width: 24px;
+height: 24px;
+left: 55px;
+top: 32px;
+
+background: #0D0D0D;
+
+
+/* Vector (Stroke) */
+
+position: absolute;
+left: 4.86%;
+right: 94.65%;
+top: 52.81%;
+bottom: 39.33%;
+
+background: #FFFFFF;
+
+
+/* Vector (Stroke) */
+
+position: absolute;
+left: 3.96%;
+right: 95.56%;
+top: 38.2%;
+bottom: 53.93%;
+
+background: #FFFFFF;
+
+
+/* Vector */
+
+position: absolute;
+left: 4.86%;
+right: 94.65%;
+top: 38.2%;
+bottom: 53.93%;
+
+background: #2ECC71;
+
+
+/* Vector */
+
+position: absolute;
+left: 3.96%;
+right: 95.56%;
+top: 52.81%;
+bottom: 39.33%;
+
+background: #2ECC71;
+
+
+/* Vector (Stroke) */
+
+position: absolute;
+left: 4.17%;
+right: 94.86%;
+top: 41.57%;
+bottom: 42.7%;
+
+background: #2ECC71;
+transform: rotate(-180deg);
+
+
+/* Rectangle 83 */
+
+position: absolute;
+width: 98px;
+height: 47px;
+left: 1079px;
+top: 21px;
+
+border: 1.5px solid #E4E2DC;
+border-radius: 11px;
+
+
+/* For Business */
+
+position: absolute;
+width: 124px;
+height: 41px;
+left: 482px;
+top: 24px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+display: flex;
+align-items: center;
+text-align: center;
+letter-spacing: -0.02em;
+
+color: #6B6B6B;
+
+
+
+/* How It Works */
+
+position: absolute;
+width: 124px;
+height: 41px;
+left: 630px;
+top: 24px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+display: flex;
+align-items: center;
+text-align: center;
+letter-spacing: -0.02em;
+
+color: #6B6B6B;
+
+
+
+/* Browse Agents */
+
+position: absolute;
+width: 141px;
+height: 41px;
+left: 780px;
+top: 24px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+display: flex;
+align-items: center;
+text-align: center;
+letter-spacing: -0.02em;
+
+color: #6B6B6B;
+
+
+
+/* Login */
+
+position: absolute;
+width: 98px;
+height: 41px;
+left: 1079px;
+top: 24px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 600;
+font-size: 18px;
+line-height: 22px;
+display: flex;
+align-items: center;
+text-align: center;
+letter-spacing: -0.02em;
+
+color: #0D0D0D;
+
+
+
+/* For Builders */
+
+position: absolute;
+width: 137px;
+height: 41px;
+left: 335px;
+top: 24px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+display: flex;
+align-items: center;
+text-align: center;
+letter-spacing: -0.02em;
+
+color: #6B6B6B;
+
+
+
+/* Rectangle 84 */
+
+position: absolute;
+width: 213px;
+height: 47px;
+left: 1191px;
+top: 21px;
+
+background: #0D0D0D;
+border-radius: 11px;
+
+
+/* Upload Workflow */
+
+position: absolute;
+width: 190px;
+height: 41px;
+left: 1191px;
+top: 24px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 600;
+font-size: 18px;
+line-height: 22px;
+display: flex;
+align-items: center;
+text-align: center;
+letter-spacing: -0.02em;
+
+color: #FFFFFF;
+
+
+
+/* Rectangle 83 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 12px;
+height: 12px;
+left: 1369px;
+top: 39px;
+
+border: 1.75px solid #FFFFFF;
+
+
+/* Line 16 */
+
+position: absolute;
+width: 1440px;
+height: 0px;
+left: 1px;
+top: 89px;
+
+border: 1.5px solid #F1EDE6;
+
+
+/* Rectangle 122 */
+
+position: absolute;
+width: 1371px;
+height: 329px;
+left: 42px;
+top: 1992px;
+
+background: #0D0D0D;
+border-radius: 17px;
+
+
+/* Ready to start re-building your trust in the agentic world? Let’s get syncing! */
+
+position: absolute;
+width: 1044px;
+height: 140px;
+left: 205px;
+top: 2055px;
+
+font-family: 'DM Serif Text';
+font-style: normal;
+font-weight: 400;
+font-size: 40px;
+line-height: 55px;
+text-align: center;
+
+color: #FFFFFF;
+
+
+
+/* Most agents look the same, their architecture doesn’t. */
+
+position: absolute;
+width: 1181px;
+height: 140px;
+left: 42px;
+top: 1187px;
+
+font-family: 'DM Serif Text';
+font-style: normal;
+font-weight: 400;
+font-size: 40px;
+line-height: 55px;
+
+color: #000000;
+
+
+
+/* Rectangle 39 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 243px;
+height: 50px;
+left: 457px;
+top: 2210px;
+
+background: #F4F4F4;
+border: 1px solid #818181;
+border-radius: 11px;
+
+
+/* I’m a Business */
+
+position: absolute;
+width: 243px;
+height: 50px;
+left: 457px;
+top: 2210px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 24px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #000000;
+
+
+
+/* Rectangle 40 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 243px;
+height: 50px;
+left: 755px;
+top: 2210px;
+
+background: #F4F4F4;
+border: 1px solid #818181;
+border-radius: 11px;
+
+
+/* I’m a Builder */
+
+position: absolute;
+width: 243px;
+height: 50px;
+left: 755px;
+top: 2210px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 24px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #000000;
+
+
+
+/* Footer */
+
+position: absolute;
+width: 1440px;
+height: 462px;
+left: 0px;
+top: 2447px;
+
+
+
+/* Rectangle 72 */
+
+position: absolute;
+width: 1440px;
+height: 462px;
+left: 0px;
+top: 2447px;
+
+background: #10100F;
+
+
+/* Line 2 */
+
+position: absolute;
+width: 1327px;
+height: 0px;
+left: 56px;
+top: 2796px;
+
+border: 1.5px solid #6C6C6C;
+
+
+/* The trust layer for the agentic economy. Verified workflows for builders, ensuring businesses deploy with confidence. */
+
+position: absolute;
+width: 421px;
+height: 66px;
+left: 56px;
+top: 2584px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+
+color: #6B6B6B;
+
+
+
+/* Enterprise-grade verification */
+
+position: absolute;
+width: 421px;
+height: 22px;
+left: 80px;
+top: 2702px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+/* identical to box height */
+
+color: #6B6B6B;
+
+
+
+/* About */
+
+position: absolute;
+width: 133px;
+height: 22px;
+left: 573px;
+top: 2570px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+/* identical to box height */
+
+color: #6B6B6B;
+
+
+
+/* Browse Agents */
+
+position: absolute;
+width: 133px;
+height: 22px;
+left: 573px;
+top: 2602px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+/* identical to box height */
+
+color: #6B6B6B;
+
+
+
+/* How It Works */
+
+position: absolute;
+width: 133px;
+height: 22px;
+left: 573px;
+top: 2634px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+/* identical to box height */
+
+color: #6B6B6B;
+
+
+
+/* Enquire */
+
+position: absolute;
+width: 133px;
+height: 22px;
+left: 573px;
+top: 2666px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+/* identical to box height */
+
+color: #6B6B6B;
+
+
+
+/* Login */
+
+position: absolute;
+width: 196px;
+height: 22px;
+left: 867px;
+top: 2570px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+/* identical to box height */
+
+color: #6B6B6B;
+
+
+
+/* Verify Agent */
+
+position: absolute;
+width: 150px;
+height: 22px;
+left: 867px;
+top: 2602px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+/* identical to box height */
+
+color: #6B6B6B;
+
+
+
+/* Security Commitment */
+
+position: absolute;
+width: 196px;
+height: 22px;
+left: 867px;
+top: 2634px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+/* identical to box height */
+
+color: #6B6B6B;
+
+
+
+/* Dashboard */
+
+position: absolute;
+width: 133px;
+height: 22px;
+left: 867px;
+top: 2666px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+/* identical to box height */
+
+color: #6B6B6B;
+
+
+
+/* Verification Process */
+
+position: absolute;
+width: 196px;
+height: 22px;
+left: 1161px;
+top: 2570px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+/* identical to box height */
+
+color: #6B6B6B;
+
+
+
+/* Case Studies */
+
+position: absolute;
+width: 150px;
+height: 22px;
+left: 1161px;
+top: 2602px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+/* identical to box height */
+
+color: #6B6B6B;
+
+
+
+/* Enquire */
+
+position: absolute;
+width: 196px;
+height: 22px;
+left: 1161px;
+top: 2634px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+/* identical to box height */
+
+color: #6B6B6B;
+
+
+
+/* 2026 SyncScore. All rights reserved. */
+
+position: absolute;
+width: 418px;
+height: 22px;
+left: 73px;
+top: 2835px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+/* identical to box height */
+
+color: #6B6B6B;
+
+
+
+/* Ellipse 25 */
+
+position: absolute;
+width: 10px;
+height: 10px;
+left: 56px;
+top: 2708px;
+
+background: #3DFF90;
+
+
+/* Group */
+
+position: absolute;
+left: 3.89%;
+right: 95.21%;
+top: 97.63%;
+bottom: 1.97%;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 3.89%;
+right: 95.21%;
+top: 97.63%;
+bottom: 1.97%;
+
+background: #6B6B6B;
+
+
+/* Vector */
+
+position: absolute;
+left: 4.09%;
+right: 95.48%;
+top: 97.72%;
+bottom: 2.06%;
+
+background: #6B6B6B;
+
+
+/* HOME */
+
+position: absolute;
+width: 133px;
+height: 19px;
+left: 573px;
+top: 2529px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 557;
+font-size: 16px;
+line-height: 19px;
+letter-spacing: 0.09em;
+
+color: #3B3B3B;
+font-variation-settings: 'slnt' 0;
+
+
+
+/* BUILDERS */
+
+position: absolute;
+width: 133px;
+height: 19px;
+left: 867px;
+top: 2529px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 557;
+font-size: 16px;
+line-height: 19px;
+letter-spacing: 0.09em;
+
+color: #3B3B3B;
+font-variation-settings: 'slnt' 0;
+
+
+
+/* BUSINESSES */
+
+position: absolute;
+width: 133px;
+height: 19px;
+left: 1161px;
+top: 2529px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 557;
+font-size: 16px;
+line-height: 19px;
+letter-spacing: 0.09em;
+
+color: #3B3B3B;
+font-variation-settings: 'slnt' 0;
+
+
+
+/* DMlogo */
+
+position: absolute;
+width: 137px;
+height: 24px;
+left: 59px;
+top: 2526px;
+
+
+
+/* SyncScore */
+
+position: absolute;
+width: 109px;
+height: 21px;
+left: 87px;
+top: 2527px;
+
+font-family: 'DM Serif Display';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 33px;
+display: flex;
+align-items: center;
+letter-spacing: -0.01em;
+
+color: #FFFFFF;
+
+
+
+/* Logo 3 */
+
+position: absolute;
+width: 24px;
+height: 24px;
+left: 59px;
+top: 2526px;
+
+
+
+/* Rectangle 71 */
+
+position: absolute;
+width: 24px;
+height: 24px;
+left: 59px;
+top: 2526px;
+
+background: #FFFFFF;
+
+
+/* Vector (Stroke) */
+
+position: absolute;
+left: 5.14%;
+right: 94.38%;
+top: 87.35%;
+bottom: 12.41%;
+
+background: #0D0D0D;
+
+
+/* Vector (Stroke) */
+
+position: absolute;
+left: 4.24%;
+right: 95.28%;
+top: 86.9%;
+bottom: 12.86%;
+
+background: #0D0D0D;
+
+
+/* Vector */
+
+position: absolute;
+left: 5.14%;
+right: 94.38%;
+top: 86.9%;
+bottom: 12.86%;
+
+background: #2ECC71;
+
+
+/* Vector */
+
+position: absolute;
+left: 4.24%;
+right: 95.28%;
+top: 87.35%;
+bottom: 12.41%;
+
+background: #2ECC71;
+
+
+/* Vector (Stroke) */
+
+position: absolute;
+left: 4.44%;
+right: 94.58%;
+top: 87.01%;
+bottom: 12.51%;
+
+background: #2ECC71;
+transform: rotate(-180deg);
+
+
+/* Rectangle 84 */
+
+position: absolute;
+width: 1439px;
+height: 390px;
+left: 0px;
+top: 687px;
+
+background: #FFFFFF;
+
+
+/* Verify */
+
+position: absolute;
+width: 79px;
+height: 41px;
+left: 244px;
+top: 898px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 600;
+font-size: 20px;
+line-height: 24px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #000000;
+
+
+
+/* We scan your agent’s architecture, not demos, not claims. */
+
+position: absolute;
+width: 320px;
+height: 41px;
+left: 122px;
+top: 931px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+text-align: center;
+
+color: #ABABAB;
+
+
+
+/* Score */
+
+position: absolute;
+width: 79px;
+height: 41px;
+left: 682px;
+top: 898px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 600;
+font-size: 20px;
+line-height: 24px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #000000;
+
+
+
+/* We evaluate technical depth across architecture, autonomy, reasoning, and guardrails. */
+
+position: absolute;
+width: 320px;
+height: 41px;
+left: 560px;
+top: 931px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+text-align: center;
+
+color: #ABABAB;
+
+
+
+/* Publish Proof */
+
+position: absolute;
+width: 151px;
+height: 41px;
+left: 1078px;
+top: 898px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 600;
+font-size: 20px;
+line-height: 24px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #000000;
+
+
+
+/* A public verification certificate. Shareable, auditable, and trusted. */
+
+position: absolute;
+width: 320px;
+height: 41px;
+left: 1002px;
+top: 931px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+text-align: center;
+
+color: #ABABAB;
+
+
+
+/* Rectangle 86 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 47px;
+height: 47px;
+left: 260px;
+top: 825px;
+
+background: #F8F7F4;
+border: 1.5px solid #D7D3CB;
+border-radius: 13px;
+
+
+/* Rectangle 87 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 25px;
+height: 25px;
+left: 270.89px;
+top: 835px;
+
+border: 1.5px solid #000000;
+border-radius: 4px;
+
+
+/* Rectangle 89 */
+
+position: absolute;
+width: 5.4px;
+height: 9.33px;
+left: 268px;
+top: 853.08px;
+
+border: 1.5px solid #000000;
+border-radius: 2px;
+transform: rotate(45deg);
+
+
+/* Ellipse 26 */
+
+position: absolute;
+width: 14px;
+height: 14px;
+left: 276.89px;
+top: 840px;
+
+border: 1.5px solid #000000;
+
+
+/* Rectangle 91 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 47px;
+height: 47px;
+left: 1138px;
+top: 825px;
+
+background: #F8F7F4;
+border: 1.5px solid #D7D3CB;
+border-radius: 13px;
+
+
+/* Line 18 */
+
+position: absolute;
+width: 3px;
+height: 0px;
+left: 275.05px;
+top: 851px;
+
+border: 1.5px solid #000000;
+transform: rotate(135deg);
+
+
+/* Line 19 */
+
+position: absolute;
+width: 3px;
+height: 0px;
+left: 277.17px;
+top: 853.12px;
+
+border: 1.5px solid #000000;
+transform: rotate(135deg);
+
+
+/* AGENT AUDIT PROCESS */
+
+position: absolute;
+width: 385px;
+height: 19px;
+left: 101px;
+top: 742px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 557;
+font-size: 16px;
+line-height: 19px;
+letter-spacing: 0.09em;
+
+color: #ABABAB;
+font-variation-settings: 'slnt' 0;
+
+
+
+/* Union */
+
+position: absolute;
+width: 16px;
+height: 20.5px;
+left: 1154px;
+top: 838px;
+
+border: 1.5px solid #000000;
+border-radius: 1px;
+
+
+/* Line 17 */
+
+position: absolute;
+width: 2.88px;
+height: 5.98px;
+left: 1159.5px;
+top: 844.2px;
+
+border: 1.5px solid #000000;
+border-radius: 0.05px;
+transform: rotate(45deg);
+
+
+/* Score Icon */
+
+position: absolute;
+width: 47px;
+height: 47px;
+left: 694px;
+top: 825px;
+
+
+
+/* Rectangle 90 */
+
+box-sizing: border-box;
+
+position: absolute;
+width: 47px;
+height: 47px;
+left: 694px;
+top: 825px;
+
+background: #F8F7F4;
+border: 1.5px solid #D7D3CB;
+border-radius: 13px;
+
+
+/* Ellipse 28 */
+
+position: absolute;
+left: 49.66%;
+right: 50.07%;
+top: 29.08%;
+bottom: 70.59%;
+
+border: 1.5px solid #000000;
+transform: rotate(45deg);
+
+
+/* Ellipse 27 */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 48.82%;
+right: 49.1%;
+top: 28.88%;
+bottom: 70.61%;
+
+border: 1.5px solid #000000;
+
+
+/* Ellipse 29 */
+
+position: absolute;
+width: 1px;
+height: 1px;
+left: 717.4px;
+top: 852.4px;
+
+background: #000000;
+
+
+/* Ellipse 30 */
+
+position: absolute;
+width: 4px;
+height: 4px;
+left: 725px;
+top: 841px;
+
+border: 1.5px solid #000000;

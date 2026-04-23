@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:syncscore;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+  flyway:
+    enabled: false
+
+app:
+  otp:
+    resend-cooldown-seconds: 60
+  jwt:
+    issuer: sync-score-test
+    secret-base64: c3luYy1zY29yZS10ZXN0LXNlY3JldC1zeW5jLXNjb3JlLXRlc3Qtc2VjcmV0
+  refresh:
+    pepper: test-pepper
