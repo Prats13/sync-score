@@ -26,10 +26,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/browse").permitAll()
+                        .requestMatchers("/api/v1/public/**").permitAll()
+                        .requestMatchers("/api/v2/profile/**").permitAll()
+                        .requestMatchers("/api/v2/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }
-

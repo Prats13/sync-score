@@ -1,0 +1,24 @@
+== SYNC SCORE — FRONTEND ==
+Directory : /Users/pratyush/IdeaProjects/sync-score/web
+Port      : 3000
+
+-- Install dependencies (first time only) --
+npm install
+
+-- Run dev server --
+npm run dev
+
+-- Production build --
+npm run build
+
+-- Run production build locally --
+npm run build && npm run start
+
+-- Type check --
+npx tsc --noEmit
+
+-- Notes --
+Backend must be running on :9741 before starting the frontend.
+Dev server proxies:
+  /auth/*  → localhost:9741/api/v1/auth/*
+  /api/*   → localhost:9741/api/*

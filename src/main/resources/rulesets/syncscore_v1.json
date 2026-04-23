@@ -1,0 +1,91 @@
+{
+  "rulesetVersion": "syncscore-v1-2026-04-14",
+  "scoreMin": 0,
+  "scoreMax": 100,
+  "tiers": [
+    { "name": "Wrapper", "min": 0, "max": 39 },
+    { "name": "Builder", "min": 40, "max": 69 },
+    { "name": "Expert", "min": 70, "max": 100 }
+  ],
+  "categories": [
+    {
+      "name": "Orchestration",
+      "pointsEach": 15,
+      "cap": 30,
+      "packages": [
+        "langgraph",
+        "crewai",
+        "autogen",
+        "openai-agents",
+        "google-adk",
+        "smolagents",
+        "mastra",
+        "pydantic-ai",
+        "strands-agents",
+        "agno"
+      ]
+    },
+    {
+      "name": "RAG & Retrieval",
+      "pointsEach": 10,
+      "cap": 20,
+      "packages": [
+        "pinecone-client",
+        "weaviate-client",
+        "chromadb",
+        "qdrant-client",
+        "llama-index",
+        "pgvector",
+        "faiss-cpu",
+        "milvus"
+      ]
+    },
+    {
+      "name": "Memory & State",
+      "pointsEach": 8,
+      "cap": 15,
+      "packages": [
+        "mem0ai",
+        "redis",
+        "motorhead",
+        "zep-python"
+      ]
+    },
+    {
+      "name": "Guardrails",
+      "pointsEach": 10,
+      "cap": 15,
+      "packages": [
+        "nemoguardrails",
+        "guardrails-ai",
+        "rebuff",
+        "llm-guard"
+      ]
+    },
+    {
+      "name": "Observability",
+      "pointsEach": 8,
+      "cap": 15,
+      "packages": [
+        "langfuse",
+        "langsmith",
+        "helicone",
+        "phoenix",
+        "openllmetry"
+      ]
+    },
+    {
+      "name": "Base SDK",
+      "pointsEach": 2,
+      "cap": 5,
+      "packages": [
+        "openai",
+        "anthropic",
+        "google-generativeai",
+        "cohere",
+        "mistralai"
+      ]
+    }
+  ]
+}
+

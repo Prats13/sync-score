@@ -1,0 +1,21 @@
+== SYNC SCORE — BACKEND ==
+Directory : /Users/pratyush/IdeaProjects/sync-score
+Port      : 9741
+
+-- Run (dev) --
+mvn -Dmaven.repo.local=./.m2 spring-boot:run
+
+-- Run all tests --
+mvn -Dmaven.repo.local=./.m2 test
+
+-- Run a single test class --
+mvn -Dmaven.repo.local=./.m2 test -Dtest=AuthFlowTest
+
+-- Build (skip tests) --
+mvn -Dmaven.repo.local=./.m2 package -DskipTests
+
+-- Prerequisites --
+PostgreSQL running on localhost:5432
+  database : syncscore
+  user     : syncscore
+  password : syncscore

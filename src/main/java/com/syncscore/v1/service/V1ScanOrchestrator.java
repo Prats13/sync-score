@@ -174,11 +174,38 @@ public class V1ScanOrchestrator {
         markLatestSubmission(event.getAgencyId(), SubmissionStatus.PROCESSED);
 
         int packageCount = computation.scored().detectedPackages().size();
-        int highTierNewCount = 0;
+        int highTierNewCount = computeNewHighTierPackageCount(event.getAgencyId(), event.getId(), computation);
         // NOTE: V2 listener MUST use @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
         // so it fires after this V1 transaction commits, not inside it.
         eventPublisher.publishEvent(new ScanCompletedEvent(
                 event.getId(), event.getAgencyId(), packageCount, highTierNewCount));
+    }
+
+    private int computeNewHighTierPackageCount(UUID agencyId, UUID currentScanEventId, ScanComputation computation) {
+        // "High-tier" in V1 == non-base categories (8+ points each in the current ruleset).
+        final int highTierPointsThreshold = 8;
+
+        UUID priorScanEventId = scanEventRepo.findByAgencyIdOrderByCreatedAtDesc(agencyId).stream()
+                .filter(se -> !se.getId().equals(currentScanEventId))
+                .filter(se -> se.getStatus() == ScanStatus.SUCCEEDED)
+                .map(ScanEvent::getId)
+                .findFirst()
+                .orElse(null);
+
+        Set<String> priorPackages = priorScanEventId == null
+                ? Set.of()
+                : detectedPackageRepo.findByScanEventId(priorScanEventId).stream()
+                        .map(DetectedPackage::getPackageNameNormalized)
+                        .collect(java.util.stream.Collectors.toSet());
+
+        if (computation == null || computation.scored == null || computation.scored.detectedPackages() == null) {
+            return 0;
+        }
+
+        return (int) computation.scored.detectedPackages().stream()
+                .filter(p -> p.pointsAwarded() >= highTierPointsThreshold)
+                .filter(p -> !priorPackages.contains(p.packageName()))
+                .count();
     }
 
     /**

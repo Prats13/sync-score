@@ -34,6 +34,7 @@ public class V2StructuralScanner {
         int limit = Math.min(repos.size(), props.repoScanDefaultLimit());
 
         List<RepoStructuralSignals> repoSignals = new ArrayList<>();
+        Instant since30d = Instant.now().minus(30, ChronoUnit.DAYS);
         Instant since90d = Instant.now().minus(90, ChronoUnit.DAYS);
 
         for (RepoSummary repo : repos.subList(0, limit)) {
@@ -48,11 +49,13 @@ public class V2StructuralScanner {
 
             FolderStructureAnalyzer.Result folderResult = folderAnalyzer.analyze(treeItems);
 
+            int commitCount30d = gitHubApi.listCommitCount(owner, name, since30d);
             int commitCount = gitHubApi.listCommitCount(owner, name, since90d);
             int contributorCount = gitHubApi.listContributorCount(owner, name);
 
             repoSignals.add(new RepoStructuralSignals(
                     owner + "/" + name,
+                    commitCount30d,
                     commitCount,
                     contributorCount,
                     repo.createdAt(),

@@ -12,3 +12,6 @@ target/
 *.md
 
 
+.worktrees/
+
+.superpowers/

@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+/* ── Design tokens (from all_layer_styling.css) ──────────────────────── */
+:root {
+  /* Page */
+  --color-bg:             #F7F6F2;
+  --color-surface:        #F6F6F3;
+  --color-surface-white:  #FFFFFF;
+  --color-ink:            #000000;
+  --color-muted:          #6B6B6B;
+  --color-border:         #D7D3CB;
+
+  /* CTA button — near-black */
+  --color-cta:            #10100F;
+  --color-cta-text:       #FFFFFF;
+
+  /* Trust / verified palette */
+  --color-verified-bg:      #EBFFF2;
+  --color-verified-border:  #2ECC71;
+  --color-verified-text:    #279455;
+
+  /* shadcn/ui compatibility layer */
+  --background:   var(--color-bg);
+  --foreground:   var(--color-ink);
+  --card:         var(--color-surface-white);
+  --card-foreground: var(--color-ink);
+  --border:       var(--color-border);
+  --input:        var(--color-border);
+  --ring:         var(--color-cta);
+  --muted:        var(--color-surface);
+  --muted-foreground: var(--color-muted);
+  --primary:      var(--color-cta);
+  --primary-foreground: var(--color-cta-text);
+  --radius: 0.75rem;
+}
+
+@theme inline {
+  --color-background: var(--color-bg);
+  --color-foreground: var(--color-ink);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-dm-serif-display);
+  --font-serif: var(--font-dm-serif-text);
+}
+
+/* ── Base reset ───────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  min-height: 100vh;
+}
+
+/* ── Tier badge classes (dynamic class workaround) ────────────────────── */
+.tier-WRAPPER {
+  background-color: #F3F4F6;
+  color: #374151;
+}
+.tier-BUILDER {
+  background-color: #DBEAFE;
+  color: #1D4ED8;
+}
+.tier-EXPERT {
+  background-color: var(--color-verified-bg);
+  color: var(--color-verified-text);
+  border: 1px solid var(--color-verified-border);
+}
+
+/* ── Utility: card ────────────────────────────────────────────────────── */
+.card-base {
+  background-color: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: 23px;
+}

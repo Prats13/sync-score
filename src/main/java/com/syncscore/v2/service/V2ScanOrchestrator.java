@@ -96,11 +96,11 @@ public class V2ScanOrchestrator {
 
         StructuralSignalAggregator.AggregatedSignals priorSignals = priorScan
                 .map(this::loadPriorSignals)
-                .orElse(new StructuralSignalAggregator.AggregatedSignals(0, 0, 0, 0, 0, 0));
+                .orElse(new StructuralSignalAggregator.AggregatedSignals(0, 0, 0, 0, 0, 0, 0));
 
-        int recentCommits90d = signals.totalCommits90d() > 0 ? signals.totalCommits90d() : 0;
+        int recentCommits30d = signals.totalCommits30d() > 0 ? signals.totalCommits30d() : 0;
         AntiGamingEvaluator.Result antiGaming = antiGamingEvaluator.evaluate(
-                priorSignals, signals, newHighTierPackages, recentCommits90d);
+                priorSignals, signals, newHighTierPackages, recentCommits30d);
 
         V2ConfidenceScorer.Result scored = confidenceScorer.score(signals, antiGaming.fired());
 
@@ -145,7 +145,7 @@ public class V2ScanOrchestrator {
         int depth = extractInt(signals, com.syncscore.v2.domain.StructuralSignalType.FOLDER_DEPTH);
         int services = extractInt(signals, com.syncscore.v2.domain.StructuralSignalType.SERVICE_COUNT);
         int consistency = extractInt(signals, com.syncscore.v2.domain.StructuralSignalType.MANIFEST_CONSISTENCY);
-        return new StructuralSignalAggregator.AggregatedSignals(commits, contributors, ageMonths, depth, services, consistency);
+        return new StructuralSignalAggregator.AggregatedSignals(0, commits, contributors, ageMonths, depth, services, consistency);
     }
 
     private int extractInt(List<ArchScanStructuralSignal> signals, com.syncscore.v2.domain.StructuralSignalType type) {
