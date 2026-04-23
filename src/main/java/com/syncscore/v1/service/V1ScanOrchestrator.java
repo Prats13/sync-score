@@ -45,6 +45,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import com.syncscore.v2.service.ScanCompletedEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -55,6 +57,7 @@ import org.springframework.util.StringUtils;
 public class V1ScanOrchestrator {
 
     private static final int HARD_MAX_REPO_LIMIT = 15;
+    private static final Logger log = LoggerFactory.getLogger(V1ScanOrchestrator.class);
 
     private final AgencyProfileRepository agencyRepo;
     private final EvidenceItemRepository evidenceRepo;
@@ -135,6 +138,8 @@ public class V1ScanOrchestrator {
         );
         event.markQueued(toEvidenceIdJson(evidenceIds));
         scanEventRepo.save(event);
+        log.info("event=SCAN_QUEUED scanEventId={} agencyId={} triggerType={}",
+                event.getId(), agencyId, triggerType);
         return event.getId();
     }
 
@@ -146,9 +151,11 @@ public class V1ScanOrchestrator {
      */
     @Transactional
     public void runScan(UUID scanEventId) {
+        long startNs = System.nanoTime();
         ScanEvent event = scanEventRepo.findById(scanEventId)
                 .orElseThrow(() -> new IllegalArgumentException("Scan event not found"));
 
+        log.info("event=SCAN_STARTED scanEventId={}", event.getId());
         event.markRunning(Instant.now());
         scanEventRepo.save(event);
 
@@ -170,6 +177,8 @@ public class V1ScanOrchestrator {
         persistResults(event, computation);
 
         event.markSucceeded(Instant.now());
+        long durationMs = (System.nanoTime() - startNs) / 1_000_000L;
+        log.info("event=SCAN_SUCCEEDED scanEventId={} durationMs={}", event.getId(), durationMs);
         scanEventRepo.save(event);
         markLatestSubmission(event.getAgencyId(), SubmissionStatus.PROCESSED);
 
@@ -218,6 +227,7 @@ public class V1ScanOrchestrator {
             event.markFailed(Instant.now(), error);
             scanEventRepo.save(event);
             markLatestSubmission(event.getAgencyId(), SubmissionStatus.FAILED);
+            log.error("event=SCAN_FAILED scanEventId={} error={}", event.getId(), error);
         });
     }
 
