@@ -1,6 +1,7 @@
 // ── Enums ──────────────────────────────────────────────────────────────────
 
 export type SyncTier = "WRAPPER" | "BUILDER" | "EXPERT"
+export type EvidenceGrade = "VERIFIED" | "DECLARED" | "INFERRED" | "NOT_TESTED"
 export type ScanStatus = "QUEUED" | "RUNNING" | "SUCCEEDED" | "FAILED"
 export type TriggerType = "GITHUB_SCAN" | "PASTE_SCAN" | "RESCAN"
 export type VerificationLabel = "GITHUB_VERIFIED" | "SELF_REPORTED" | "UNVERIFIED"

@@ -20,6 +20,9 @@ export function Navbar() {
           <Link href="/browse" className="transition-colors hover:text-[#000000]">
             Browse
           </Link>
+          <Link href="/translate" className="transition-colors hover:text-[#000000]">
+            Find an agency
+          </Link>
           <Link href="/how-it-works" className="transition-colors hover:text-[#000000]">
             How it works
           </Link>

@@ -106,7 +106,12 @@ export default function DashboardPage() {
               <p className="mt-1 text-sm text-[#6B6B6B]">{agency.niche}</p>
             )}
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
+            <Button asChild size="sm" variant="outline">
+              <Link href="/dashboard/verify-architecture">
+                Architecture session
+              </Link>
+            </Button>
             <Button asChild size="sm" variant="outline">
               <Link href="/dashboard/verify">
                 {dashboard?.latestScore ? "Re-verify" : "Get verified"}
@@ -210,10 +215,92 @@ export default function DashboardPage() {
           )
         )}
 
+        {/* ── Anti-gaming alert ─────────────────────────────────────────── */}
+        {archProfile?.hasOpenReviewCase && (
+          <div className="mb-6 flex items-start gap-3 rounded-[23px] border-2 border-amber-200 bg-amber-50 p-5">
+            <span className="mt-0.5 text-lg">⚑</span>
+            <div>
+              <p className="text-sm font-semibold text-amber-800">Architecture review in progress</p>
+              <p className="mt-0.5 text-xs text-amber-700">
+                A recent architecture change has been flagged for review. Your score remains visible
+                but the Architecture Verified badge is paused until the review resolves. This is
+                a routine integrity check — no action required from you.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* ── Architecture monitoring ───────────────────────────────────── */}
+        {archProfile ? (
+          <div className="mb-6 rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-6">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="font-semibold text-[#000000]">Architecture monitoring</h2>
+              <Link
+                href="/dashboard/verify-architecture"
+                className="rounded-full border-2 border-[#D7D3CB] px-3 py-1 text-xs font-medium text-[#6B6B6B] transition-colors hover:border-[#10100F] hover:text-[#000000]"
+              >
+                New session →
+              </Link>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="rounded-xl border-2 border-[#D7D3CB] bg-white p-3 text-center">
+                <p className="text-xs font-semibold uppercase tracking-widest text-[#6B6B6B]">Confidence</p>
+                <p className={[
+                  "mt-1 text-base font-bold",
+                  archProfile.confidence === "HIGH" ? "text-[#279455]"
+                  : archProfile.confidence === "MEDIUM" ? "text-amber-600"
+                  : "text-[#6B6B6B]",
+                ].join(" ")}>
+                  {archProfile.confidence ?? "—"}
+                </p>
+              </div>
+              <div className="rounded-xl border-2 border-[#D7D3CB] bg-white p-3 text-center">
+                <p className="text-xs font-semibold uppercase tracking-widest text-[#6B6B6B]">Status</p>
+                <p className={[
+                  "mt-1 text-xs font-bold",
+                  archProfile.archStatus === "VERIFIED" ? "text-[#279455]"
+                  : archProfile.archStatus === "EVIDENCE_MISMATCH" ? "text-red-500"
+                  : "text-amber-600",
+                ].join(" ")}>
+                  {archProfile.archStatus?.replace("_", " ") ?? "—"}
+                </p>
+              </div>
+              <div className="rounded-xl border-2 border-[#D7D3CB] bg-white p-3 text-center">
+                <p className="text-xs font-semibold uppercase tracking-widest text-[#6B6B6B]">Source</p>
+                <p className="mt-1 text-xs font-bold text-[#000000]">
+                  {archProfile.evidenceSource || "—"}
+                </p>
+              </div>
+            </div>
+            {archProfile.lastVerifiedAt && (
+              <p className="mt-3 text-xs text-[#6B6B6B]">
+                Last verified {formatDate(archProfile.lastVerifiedAt)} · Automated rescans keep this fresh
+              </p>
+            )}
+          </div>
+        ) : (
+          !notFound && (
+            <div className="mb-6 rounded-[23px] border-2 border-dashed border-[#D7D3CB] bg-[#F6F6F3] p-6">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold text-[#000000]">Unlock Architecture Verified</p>
+                  <p className="mt-0.5 text-xs text-[#6B6B6B]">
+                    Connect your systems for an architecture-level trust signal that goes beyond
+                    manifest scanning.
+                  </p>
+                </div>
+                <Button asChild size="sm" className="rounded-full bg-[#10100F] text-white hover:bg-[#10100F]/80">
+                  <Link href="/dashboard/verify-architecture">Start session →</Link>
+                </Button>
+              </div>
+            </div>
+          )
+        )}
+
         {/* Scan history */}
         {dashboard && dashboard.scans.length > 0 && (
           <div className="rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-6">
-            <h2 className="mb-4 font-semibold text-[#000000]">Scan history</h2>
+            <h2 className="mb-4 font-semibold text-[#000000]">Verification timeline</h2>
             <div className="space-y-2">
               {dashboard.scans.map((s) => (
                 <Link
