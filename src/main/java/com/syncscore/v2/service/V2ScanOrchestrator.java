@@ -16,6 +16,8 @@ import com.syncscore.v1.repo.AgencyProfileRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -28,6 +30,7 @@ import org.springframework.util.StringUtils;
 public class V2ScanOrchestrator {
 
     static final String RULESET_VERSION = "syncscore-v2-2026-04-18";
+    private static final Logger log = LoggerFactory.getLogger(V2ScanOrchestrator.class);
 
     private final ArchitectureScanRepository archScanRepo;
     private final ArchScanStructuralSignalRepository signalRepo;
@@ -74,13 +77,17 @@ public class V2ScanOrchestrator {
     @Transactional
     public UUID createQueuedScan(UUID agencyId, UUID scanEventId) {
         ArchitectureScan scan = new ArchitectureScan(agencyId, scanEventId, RULESET_VERSION);
-        return archScanRepo.save(scan).getId();
+        UUID id = archScanRepo.save(scan).getId();
+        log.info("event=ARCH_SCAN_QUEUED archScanId={} agencyId={}", id, agencyId);
+        return id;
     }
 
     @Transactional
     public void runScan(UUID archScanId, UUID agencyId, int detectedPackageCount, int newHighTierPackages) {
+        long startNs = System.nanoTime();
         ArchitectureScan scan = archScanRepo.findById(archScanId)
                 .orElseThrow(() -> new IllegalArgumentException("Architecture scan not found: " + archScanId));
+        log.info("event=ARCH_SCAN_STARTED archScanId={} agencyId={}", archScanId, agencyId);
         scan.markRunning();
         archScanRepo.save(scan);
 
@@ -110,10 +117,15 @@ public class V2ScanOrchestrator {
             ArchitectureReviewCase reviewCase = new ArchitectureReviewCase(
                     agencyId, scan.getId(), antiGaming.reason(),
                     objectMapper.valueToTree(java.util.Map.of("detail", antiGaming.detail() != null ? antiGaming.detail() : "")));
-            reviewCaseRepo.save(reviewCase);
+            ArchitectureReviewCase saved = reviewCaseRepo.save(reviewCase);
+            log.warn("event=REVIEW_CASE_OPENED caseId={} agencyId={} reason={}",
+                    saved.getId(), agencyId, saved.getTriggerReason());
         }
 
         scan.markSucceeded(scored.confidence(), scored.archStatus());
+        long durationMs = (System.nanoTime() - startNs) / 1_000_000L;
+        log.info("event=ARCH_SCAN_SUCCEEDED archScanId={} agencyId={} durationMs={} confidence={} archStatus={}",
+                archScanId, agencyId, durationMs, scored.confidence(), scored.archStatus());
         archScanRepo.save(scan);
     }
 
@@ -122,6 +134,7 @@ public class V2ScanOrchestrator {
         archScanRepo.findById(archScanId).ifPresent(scan -> {
             scan.markFailed(error);
             archScanRepo.save(scan);
+            log.error("event=ARCH_SCAN_FAILED archScanId={} error={}", archScanId, error);
         });
     }
 
