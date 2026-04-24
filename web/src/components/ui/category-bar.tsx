@@ -23,13 +23,13 @@ export function CategoryBar({ label, points, cap, className }: CategoryBarProps)
   return (
     <div className={cn("space-y-1.5", className)}>
       <div className="flex items-center justify-between text-sm">
-        <span className="font-medium text-[#000000]">{label}</span>
-        <span className="tabular-nums text-[#6B6B6B]">
+        <span className="font-medium text-ink">{label}</span>
+        <span className="tabular-nums text-muted">
           {points}
           <span className="text-xs">/{cap}</span>
         </span>
       </div>
-      <div className="h-2 rounded-full bg-[#D7D3CB]">
+      <div className="h-2 rounded-full bg-hairline-strong">
         <div
           className={cn("h-2 rounded-full transition-all duration-500", color)}
           style={{ width: `${pct}%` }}

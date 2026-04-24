@@ -1,6 +1,7 @@
 // ── Enums ──────────────────────────────────────────────────────────────────
 
 export type SyncTier = "WRAPPER" | "BUILDER" | "EXPERT"
+export type EvidenceGrade = "VERIFIED" | "DECLARED" | "INFERRED" | "NOT_TESTED"
 export type ScanStatus = "QUEUED" | "RUNNING" | "SUCCEEDED" | "FAILED"
 export type TriggerType = "GITHUB_SCAN" | "PASTE_SCAN" | "RESCAN"
 export type VerificationLabel = "GITHUB_VERIFIED" | "SELF_REPORTED" | "UNVERIFIED"
@@ -28,8 +29,34 @@ export interface ArchitectureScanResponse {
   archStatus: ArchStatus | null
   evidenceSource: string
   rulesetVersion: string
+  llmScore: number | null
+  llmReasoning: string | null
   createdAt: string
   finishedAt: string | null
+}
+
+export interface ScanSignalResponse {
+  signalType: string
+  valueNumeric: number | null
+  valueLabel: string | null
+  confidenceContribution: number | null
+}
+
+export interface ScanRepoResponse {
+  repoFullName: string
+  commits30d: number
+  commits90d: number
+  contributorCount: number
+  maxFolderDepth: number
+  serviceCount: number
+  sourceFileCount: number
+  repoAgeMonths: number
+}
+
+export interface ScanDetailResponse {
+  scan: ArchitectureScanResponse
+  signals: ScanSignalResponse[]
+  repos: ScanRepoResponse[]
 }
 
 export interface ReviewCaseResponse {
@@ -60,6 +87,7 @@ export interface MeResponse {
   id: string
   username: string
   email: string | null
+  roles: string[]
 }
 
 // Auth request bodies

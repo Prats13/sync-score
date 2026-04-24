@@ -90,10 +90,7 @@ export default function SignupPage() {
     <div className="flex min-h-[70vh] items-center justify-center px-6 py-12">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <h1
-            className="text-3xl text-[#000000]"
-            style={{ fontFamily: "var(--font-dm-serif-display)" }}
-          >
+          <h1 className="text-4xl text-ink font-display">
             Create your account
           </h1>
           {/* Step pills */}
@@ -102,51 +99,51 @@ export default function SignupPage() {
               <div key={s} className="flex items-center gap-2">
                 <span
                   className={[
-                    "flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold",
+                    "flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-mono",
                     i <= currentIdx
-                      ? "bg-[#10100F] text-white"
-                      : "border-2 border-[#D7D3CB] text-[#6B6B6B]",
+                      ? "bg-trust text-bg"
+                      : "border border-hairline-strong text-muted",
                   ].join(" ")}
                 >
                   {i + 1}
                 </span>
-                <span className={`text-xs ${i === currentIdx ? "font-medium text-[#000000]" : "text-[#6B6B6B]"}`}>
+                <span className={`text-[12px] font-medium ${i === currentIdx ? "text-ink" : "text-muted"}`}>
                   {s}
                 </span>
                 {i < steps.length - 1 && (
-                  <span className="mx-1 h-px w-6 bg-[#D7D3CB]" />
+                  <span className="mx-1 h-px w-6 bg-hairline-strong" />
                 )}
               </div>
             ))}
           </div>
         </div>
 
-        <div className="rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-8">
+        <div className="card-base p-8">
           {/* Step 1: Email */}
           {step === "email" && (
             <form onSubmit={emailForm.handleSubmit(onEmailSubmit)} className="space-y-4">
               <div className="space-y-1.5">
-                <Label htmlFor="email">Email address</Label>
+                <Label htmlFor="email" className="text-ink">Email address</Label>
                 <Input
                   id="email"
                   type="email"
                   autoComplete="email"
                   {...emailForm.register("email")}
-                  className="border-[#D7D3CB] bg-white"
+                  className="border-hairline-strong bg-surface-1 text-ink focus-visible:ring-trust"
                 />
                 {emailForm.formState.errors.email && (
-                  <p className="text-xs text-red-500">{emailForm.formState.errors.email.message}</p>
+                  <p className="text-xs text-mismatch">{emailForm.formState.errors.email.message}</p>
                 )}
               </div>
               {error && (
-                <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+                <div className="rounded-lg border border-mismatch-bg bg-mismatch-bg/30 px-3 py-2 text-sm text-mismatch">
                   {error}
                 </div>
               )}
               <Button
                 type="submit"
                 disabled={emailForm.formState.isSubmitting}
-                className="w-full rounded-full bg-[#10100F] text-white hover:bg-[#10100F]/80"
+                className="w-full mt-2 rounded-full bg-trust text-bg hover:opacity-80 transition-opacity"
               >
                 {emailForm.formState.isSubmitting ? "Sending…" : "Send verification code"}
               </Button>
@@ -156,38 +153,38 @@ export default function SignupPage() {
           {/* Step 2: OTP */}
           {step === "otp" && (
             <form onSubmit={otpForm.handleSubmit(onOtpSubmit)} className="space-y-4">
-              <p className="text-sm text-[#6B6B6B]">
-                We sent a 6-digit code to <span className="font-medium text-[#000000]">{email}</span>
+              <p className="text-[13px] text-muted">
+                We sent a 6-digit code to <span className="font-medium text-ink">{email}</span>
               </p>
-              <div className="space-y-1.5">
-                <Label htmlFor="otp">Verification code</Label>
+              <div className="space-y-1.5 pt-2">
+                <Label htmlFor="otp" className="text-ink">Verification code</Label>
                 <Input
                   id="otp"
                   maxLength={6}
                   autoComplete="one-time-code"
                   inputMode="numeric"
                   {...otpForm.register("otp")}
-                  className="border-[#D7D3CB] bg-white text-center text-2xl tracking-[0.5em]"
+                  className="border-hairline-strong bg-surface-1 text-ink text-center text-2xl tracking-[0.5em] font-mono h-12"
                 />
                 {otpForm.formState.errors.otp && (
-                  <p className="text-xs text-red-500">{otpForm.formState.errors.otp.message}</p>
+                  <p className="text-xs text-mismatch">{otpForm.formState.errors.otp.message}</p>
                 )}
               </div>
               {error && (
-                <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+                <div className="rounded-lg border border-mismatch-bg bg-mismatch-bg/30 px-3 py-2 text-sm text-mismatch">
                   {error}
                 </div>
               )}
               <Button
                 type="submit"
                 disabled={otpForm.formState.isSubmitting}
-                className="w-full rounded-full bg-[#10100F] text-white hover:bg-[#10100F]/80"
+                className="w-full mt-2 rounded-full bg-trust text-bg hover:opacity-80 transition-opacity"
               >
                 {otpForm.formState.isSubmitting ? "Verifying…" : "Verify code"}
               </Button>
               <button
                 type="button"
-                className="w-full text-center text-xs text-[#6B6B6B] underline-offset-2 hover:underline"
+                className="w-full mt-2 text-center text-[12px] text-muted underline-offset-2 hover:underline hover:text-ink transition-colors"
                 onClick={() => setStep("email")}
               >
                 Change email
@@ -198,45 +195,45 @@ export default function SignupPage() {
           {/* Step 3: Complete */}
           {step === "complete" && (
             <form onSubmit={completeForm.handleSubmit(onCompleteSubmit)} className="space-y-4">
-              <p className="text-sm text-[#6B6B6B]">Choose a username and password to finish.</p>
-              <div className="space-y-1.5">
-                <Label htmlFor="username">Username</Label>
+              <p className="text-[13px] text-muted">Choose a username and password to finish.</p>
+              <div className="space-y-1.5 pt-2">
+                <Label htmlFor="username" className="text-ink">Username</Label>
                 <Input
                   id="username"
                   autoComplete="username"
                   {...completeForm.register("username")}
-                  className="border-[#D7D3CB] bg-white"
+                  className="border-hairline-strong bg-surface-1 text-ink focus-visible:ring-trust"
                 />
                 {completeForm.formState.errors.username && (
-                  <p className="text-xs text-red-500">
+                  <p className="text-xs text-mismatch">
                     {completeForm.formState.errors.username.message}
                   </p>
                 )}
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="pw">Password</Label>
+                <Label htmlFor="pw" className="text-ink">Password</Label>
                 <Input
                   id="pw"
                   type="password"
                   autoComplete="new-password"
                   {...completeForm.register("password")}
-                  className="border-[#D7D3CB] bg-white"
+                  className="border-hairline-strong bg-surface-1 text-ink focus-visible:ring-trust"
                 />
                 {completeForm.formState.errors.password && (
-                  <p className="text-xs text-red-500">
+                  <p className="text-xs text-mismatch">
                     {completeForm.formState.errors.password.message}
                   </p>
                 )}
               </div>
               {error && (
-                <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+                <div className="rounded-lg border border-mismatch-bg bg-mismatch-bg/30 px-3 py-2 text-sm text-mismatch">
                   {error}
                 </div>
               )}
               <Button
                 type="submit"
                 disabled={completeForm.formState.isSubmitting}
-                className="w-full rounded-full bg-[#10100F] text-white hover:bg-[#10100F]/80"
+                className="w-full mt-2 rounded-full bg-trust text-bg hover:opacity-80 transition-opacity"
               >
                 {completeForm.formState.isSubmitting ? "Creating account…" : "Create account"}
               </Button>
@@ -244,9 +241,9 @@ export default function SignupPage() {
           )}
         </div>
 
-        <p className="mt-6 text-center text-sm text-[#6B6B6B]">
+        <p className="mt-6 text-center text-[13px] text-muted">
           Already have an account?{" "}
-          <Link href="/auth/login" className="font-medium text-[#000000] underline-offset-2 hover:underline">
+          <Link href="/auth/login" className="font-medium text-ink underline-offset-2 hover:underline">
             Log in
           </Link>
         </p>

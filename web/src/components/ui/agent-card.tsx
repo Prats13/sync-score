@@ -14,18 +14,18 @@ export function AgentCard({ agency, className }: AgentCardProps) {
     <Link
       href={`/agents/${agency.slug}`}
       className={cn(
-        "group block rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-6",
-        "transition-all duration-200 hover:-translate-y-1 hover:border-[#10100F] hover:shadow-md",
+        "group block rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-6",
+        "transition-all duration-200 hover:-translate-y-1 hover:border-trust-border hover:shadow-md",
         className,
       )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <h3 className="truncate text-base font-semibold text-[#000000] group-hover:underline">
+          <h3 className="truncate text-base font-semibold text-ink group-hover:underline">
             {agency.agencyName}
           </h3>
           {agency.niche && (
-            <p className="mt-0.5 truncate text-sm text-[#6B6B6B]">{agency.niche}</p>
+            <p className="mt-0.5 truncate text-sm text-muted">{agency.niche}</p>
           )}
         </div>
         {agency.tier && (
@@ -38,7 +38,7 @@ export function AgentCard({ agency, className }: AgentCardProps) {
       </div>
 
       {agency.websiteUrl && (
-        <p className="mt-3 truncate text-xs text-[#6B6B6B]">
+        <p className="mt-3 truncate text-xs text-muted">
           {agency.websiteUrl.replace(/^https?:\/\//, "")}
         </p>
       )}

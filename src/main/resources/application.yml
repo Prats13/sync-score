@@ -38,3 +38,10 @@ app:
     pepper: ${APP_REFRESH_PEPPER:dev-refresh-pepper-change-me}
   google:
     client-id: ${APP_GOOGLE_CLIENT_ID:}
+  integrity:
+    enabled: ${APP_INTEGRITY_ENABLED:true}
+    freshness-threshold-days: ${APP_INTEGRITY_FRESHNESS_THRESHOLD_DAYS:14}
+    cron: ${APP_INTEGRITY_CRON:0 0 2 * * *}
+  bedrock:
+    region: ${AWS_REGION:ap-south-1}
+    model-id: ${APP_BEDROCK_MODEL_ID:}

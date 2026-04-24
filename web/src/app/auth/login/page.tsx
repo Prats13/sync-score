@@ -54,46 +54,43 @@ export default function LoginPage() {
     <div className="flex min-h-[70vh] items-center justify-center px-6">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <h1
-            className="text-3xl text-[#000000]"
-            style={{ fontFamily: "var(--font-dm-serif-display)" }}
-          >
+          <h1 className="text-4xl text-ink font-display">
             Welcome back
           </h1>
-          <p className="mt-2 text-sm text-[#6B6B6B]">Log in to your SyncScore account</p>
+          <p className="mt-2 text-[14px] text-muted">Log in to your SyncScore account</p>
         </div>
 
-        <div className="rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-8">
+        <div className="card-base p-8">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-1.5">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="username" className="text-ink">Username</Label>
               <Input
                 id="username"
                 autoComplete="username"
                 {...register("username")}
-                className="border-[#D7D3CB] bg-white"
+                className="border-hairline-strong bg-surface-1 text-ink focus-visible:ring-trust"
               />
               {errors.username && (
-                <p className="text-xs text-red-500">{errors.username.message}</p>
+                <p className="text-xs text-mismatch">{errors.username.message}</p>
               )}
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-ink">Password</Label>
               <Input
                 id="password"
                 type="password"
                 autoComplete="current-password"
                 {...register("password")}
-                className="border-[#D7D3CB] bg-white"
+                className="border-hairline-strong bg-surface-1 text-ink focus-visible:ring-trust"
               />
               {errors.password && (
-                <p className="text-xs text-red-500">{errors.password.message}</p>
+                <p className="text-xs text-mismatch">{errors.password.message}</p>
               )}
             </div>
 
             {error && (
-              <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+              <div className="rounded-lg border border-mismatch-bg bg-mismatch-bg/30 px-3 py-2 text-sm text-mismatch">
                 {error}
               </div>
             )}
@@ -101,16 +98,16 @@ export default function LoginPage() {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full rounded-full bg-[#10100F] text-white hover:bg-[#10100F]/80"
+              className="w-full rounded-full bg-trust text-bg hover:opacity-80 mt-2"
             >
               {isSubmitting ? "Logging in…" : "Log in"}
             </Button>
           </form>
         </div>
 
-        <p className="mt-6 text-center text-sm text-[#6B6B6B]">
+        <p className="mt-6 text-center text-[13px] text-muted">
           Don&apos;t have an account?{" "}
-          <Link href="/auth/signup" className="font-medium text-[#000000] underline-offset-2 hover:underline">
+          <Link href="/auth/signup" className="font-medium text-ink underline-offset-2 hover:underline">
             Sign up
           </Link>
         </p>

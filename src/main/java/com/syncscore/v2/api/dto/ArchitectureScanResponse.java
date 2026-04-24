@@ -13,6 +13,8 @@ public record ArchitectureScanResponse(
         ArchStatus archStatus,
         String evidenceSource,
         String rulesetVersion,
+        Integer llmScore,
+        String llmReasoning,
         Instant createdAt,
         Instant finishedAt
 ) {}

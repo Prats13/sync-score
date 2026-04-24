@@ -1,18 +1,27 @@
 package com.syncscore.v2.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.syncscore.v2.api.dto.ConfidentialScanRequest;
+import com.syncscore.v2.domain.ArchStatus;
 import com.syncscore.v2.domain.ArchitectureReviewCase;
 import com.syncscore.v2.domain.ArchitectureScan;
+import com.syncscore.v2.domain.ArchScanRepo;
 import com.syncscore.v2.domain.ArchScanStructuralSignal;
+import com.syncscore.v2.domain.ConfidentialScanSession;
 import com.syncscore.v2.repo.ArchitectureReviewCaseRepository;
 import com.syncscore.v2.repo.ArchitectureScanRepository;
+import com.syncscore.v2.repo.ArchScanRepoRepository;
 import com.syncscore.v2.repo.ArchScanStructuralSignalRepository;
+import com.syncscore.v2.repo.ConfidentialScanSessionRepository;
+import com.syncscore.v2.scanner.RepoStructuralSignals;
 import com.syncscore.v2.scanner.StructuralSignalAggregator;
 import com.syncscore.v2.scanner.V2StructuralScanner;
 import com.syncscore.v2.scoring.AntiGamingEvaluator;
 import com.syncscore.v2.scoring.SignalScore;
 import com.syncscore.v2.scoring.V2ConfidenceScorer;
+import com.syncscore.v1.domain.EvidenceType;
 import com.syncscore.v1.repo.AgencyProfileRepository;
+import com.syncscore.v1.repo.EvidenceItemRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,31 +43,43 @@ public class V2ScanOrchestrator {
 
     private final ArchitectureScanRepository archScanRepo;
     private final ArchScanStructuralSignalRepository signalRepo;
+    private final ArchScanRepoRepository scanRepoRepo;
     private final ArchitectureReviewCaseRepository reviewCaseRepo;
+    private final ConfidentialScanSessionRepository sessionRepo;
     private final AgencyProfileRepository agencyRepo;
+    private final EvidenceItemRepository evidenceRepo;
     private final V2StructuralScanner structuralScanner;
     private final V2ConfidenceScorer confidenceScorer;
     private final AntiGamingEvaluator antiGamingEvaluator;
+    private final LLMScoringService llmScoringService;
     private final V2ScanAsyncBridge asyncBridge;
     private final ObjectMapper objectMapper;
 
     public V2ScanOrchestrator(
             ArchitectureScanRepository archScanRepo,
             ArchScanStructuralSignalRepository signalRepo,
+            ArchScanRepoRepository scanRepoRepo,
             ArchitectureReviewCaseRepository reviewCaseRepo,
+            ConfidentialScanSessionRepository sessionRepo,
             AgencyProfileRepository agencyRepo,
+            EvidenceItemRepository evidenceRepo,
             V2StructuralScanner structuralScanner,
             V2ConfidenceScorer confidenceScorer,
             AntiGamingEvaluator antiGamingEvaluator,
+            LLMScoringService llmScoringService,
             @Lazy V2ScanAsyncBridge asyncBridge,
             ObjectMapper objectMapper) {
         this.archScanRepo = archScanRepo;
         this.signalRepo = signalRepo;
+        this.scanRepoRepo = scanRepoRepo;
         this.reviewCaseRepo = reviewCaseRepo;
+        this.sessionRepo = sessionRepo;
         this.agencyRepo = agencyRepo;
+        this.evidenceRepo = evidenceRepo;
         this.structuralScanner = structuralScanner;
         this.confidenceScorer = confidenceScorer;
         this.antiGamingEvaluator = antiGamingEvaluator;
+        this.llmScoringService = llmScoringService;
         this.asyncBridge = asyncBridge;
         this.objectMapper = objectMapper;
     }
@@ -83,6 +104,35 @@ public class V2ScanOrchestrator {
     }
 
     @Transactional
+    public UUID createConfidentialScan(UUID agencyId, ConfidentialScanRequest request) {
+        String evidenceSource = toEvidenceSource(request.source());
+        ArchitectureScan scan = new ArchitectureScan(agencyId, null, RULESET_VERSION);
+        scan.setEvidenceSource(evidenceSource);
+        UUID id = archScanRepo.save(scan).getId();
+
+        ConfidentialScanSession session = new ConfidentialScanSession(
+                agencyId, id, request.source(),
+                objectMapper.valueToTree(request.exclusions() != null ? request.exclusions() : java.util.List.of()),
+                request.customExclusions()
+        );
+        sessionRepo.save(session);
+
+        log.info("event=CONFIDENTIAL_SCAN_QUEUED archScanId={} agencyId={} source={}", id, agencyId, request.source());
+        return id;
+    }
+
+    private static String toEvidenceSource(String source) {
+        return switch (source == null ? "" : source.toLowerCase()) {
+            case "github"    -> "CONFIDENTIAL_GITHUB";
+            case "agent"     -> "CONFIDENTIAL_AGENT";
+            case "docs"      -> "CONFIDENTIAL_DOCS";
+            case "export"    -> "CONFIDENTIAL_EXPORT";
+            case "interview" -> "CONFIDENTIAL_INTERVIEW";
+            default          -> "CONFIDENTIAL_MIXED";
+        };
+    }
+
+    @Transactional
     public void runScan(UUID archScanId, UUID agencyId, int detectedPackageCount, int newHighTierPackages) {
         long startNs = System.nanoTime();
         ArchitectureScan scan = archScanRepo.findById(archScanId)
@@ -91,12 +141,33 @@ public class V2ScanOrchestrator {
         scan.markRunning();
         archScanRepo.save(scan);
 
-        String githubUsername = agencyRepo.findById(agencyId)
-                .orElseThrow(() -> new IllegalStateException("Agency not found"))
-                .getGithubUsername();
+        var agency = agencyRepo.findById(agencyId)
+                .orElseThrow(() -> new IllegalStateException("Agency not found"));
+        String githubUsername = agency.getGithubUsername();
 
-        StructuralSignalAggregator.AggregatedSignals signals =
+        if (!StringUtils.hasText(githubUsername)) {
+            // Attempt recovery from evidence items (GITHUB_USERNAME type)
+            githubUsername = evidenceRepo.findByAgencyIdOrderByCreatedAtDesc(agencyId).stream()
+                    .filter(e -> e.getEvidenceType() == EvidenceType.GITHUB_USERNAME
+                            && StringUtils.hasText(e.getContentText()))
+                    .findFirst()
+                    .map(e -> e.getContentText().strip())
+                    .orElse(null);
+
+            if (StringUtils.hasText(githubUsername)) {
+                agency.updateProfile(agency.getName(), agency.getNiche(), agency.getWebsiteUrl(),
+                        agency.getDescription(), agency.getBookingUrl(), githubUsername, agency.isPublic());
+                agencyRepo.save(agency);
+                log.info("event=GITHUB_USERNAME_RECOVERED agencyId={} username={}", agencyId, githubUsername);
+            } else {
+                throw new IllegalStateException("No GitHub username on file — please submit GitHub evidence first.");
+            }
+        }
+
+        V2StructuralScanner.ScanResult scanResult =
                 structuralScanner.scan(githubUsername, detectedPackageCount);
+        StructuralSignalAggregator.AggregatedSignals signals = scanResult.signals();
+        persistRepos(scan.getId(), scanResult.repos());
 
         Optional<ArchitectureScan> priorScan = archScanRepo
                 .findTopByAgencyIdAndStatusOrderByCreatedAtDesc(agencyId, "SUCCEEDED");
@@ -122,6 +193,18 @@ public class V2ScanOrchestrator {
                     saved.getId(), agencyId, saved.getTriggerReason());
         }
 
+        List<ArchScanRepo> savedRepos = scanRepoRepo.findByArchitectureScanId(scan.getId());
+        List<ArchScanStructuralSignal> savedSignals = signalRepo.findByArchitectureScanId(scan.getId());
+        LLMScoringService.LLMResult llmResult = llmScoringService.score(
+                scan.getScanEventId(), savedRepos, savedSignals,
+                scored.confidence(), scored.archStatus(), scored.weightedTotal());
+        if (llmResult != null) {
+            scan.setLlmScore(llmResult.score());
+            scan.setLlmReasoning(llmResult.reasoning());
+            scan.setLlmModelId(llmResult.modelId());
+            log.info("event=LLM_SCORE_COMPUTED archScanId={} score={}", archScanId, llmResult.score());
+        }
+
         scan.markSucceeded(scored.confidence(), scored.archStatus());
         long durationMs = (System.nanoTime() - startNs) / 1_000_000L;
         log.info("event=ARCH_SCAN_SUCCEEDED archScanId={} agencyId={} durationMs={} confidence={} archStatus={}",
@@ -136,6 +219,31 @@ public class V2ScanOrchestrator {
             archScanRepo.save(scan);
             log.error("event=ARCH_SCAN_FAILED archScanId={} error={}", archScanId, error);
         });
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void markFreshnessLow(UUID archScanId) {
+        archScanRepo.findById(archScanId).ifPresent(scan -> {
+            scan.markSucceeded(scan.getConfidence(), ArchStatus.FRESHNESS_LOW);
+            archScanRepo.save(scan);
+        });
+    }
+
+    private void persistRepos(UUID archScanId, List<RepoStructuralSignals> repos) {
+        if (repos == null || repos.isEmpty()) return;
+        java.time.Instant now = java.time.Instant.now();
+        List<ArchScanRepo> rows = repos.stream().map(r -> {
+            int ageMonths = 0;
+            if (r.repoCreatedAt() != null) {
+                ageMonths = (int) Math.max(0, java.time.temporal.ChronoUnit.MONTHS.between(
+                        r.repoCreatedAt().atZone(java.time.ZoneOffset.UTC).toLocalDate(),
+                        now.atZone(java.time.ZoneOffset.UTC).toLocalDate()));
+            }
+            return new ArchScanRepo(archScanId, r.repoFullName(),
+                    r.commitCount30d(), r.commitCount90d(), r.contributorCount(),
+                    r.maxFolderDepth(), r.serviceCount(), r.sourceFileCount(), ageMonths);
+        }).toList();
+        scanRepoRepo.saveAll(rows);
     }
 
     private void persistSignals(UUID archScanId, List<SignalScore> scores) {

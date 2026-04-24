@@ -56,9 +56,13 @@ public class V1VerificationController {
     ) {
         AgencyProfile agency = agencyService.getAgencyForUserOrThrow(principal.userId());
 
+        String username = req.githubUsername().strip();
+
         EvidenceItem ev = new EvidenceItem(agency.getId(), EvidenceType.GITHUB_USERNAME);
-        ev.setContentText(req.githubUsername().strip());
+        ev.setContentText(username);
         evidenceRepo.save(ev);
+
+        agencyService.saveGithubUsername(agency.getId(), username);
 
         UUID scanId = scanRunner.enqueueInitialScan(agency.getId());
         return new ScanEnqueueResponse(scanId);

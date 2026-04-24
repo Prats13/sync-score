@@ -21,3 +21,5 @@ app:
     secret-base64: c3luYy1zY29yZS10ZXN0LXNlY3JldC1zeW5jLXNjb3JlLXRlc3Qtc2VjcmV0
   refresh:
     pepper: test-pepper
+  integrity:
+    enabled: false

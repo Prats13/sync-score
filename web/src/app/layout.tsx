@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Inter, DM_Serif_Text, DM_Serif_Display } from "next/font/google"
+import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google"
 import "./globals.css"
 import { AuthProvider } from "@/lib/auth-context"
 import { Navbar } from "@/components/layout/navbar"
@@ -11,16 +11,16 @@ const inter = Inter({
   display: "swap",
 })
 
-const dmSerifText = DM_Serif_Text({
-  variable: "--font-dm-serif-text",
-  weight: "400",
+const instrument = Instrument_Serif({
+  variable: "--font-instrument",
+  weight: ["400"],
+  style: ["normal", "italic"],
   subsets: ["latin"],
   display: "swap",
 })
 
-const dmSerifDisplay = DM_Serif_Display({
-  variable: "--font-dm-serif-display",
-  weight: "400",
+const jetbrains = JetBrains_Mono({
+  variable: "--font-jetbrains",
   subsets: ["latin"],
   display: "swap",
 })
@@ -39,9 +39,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${dmSerifText.variable} ${dmSerifDisplay.variable} h-full`}
+      className={`${inter.variable} ${instrument.variable} ${jetbrains.variable} h-full`}
     >
-      <body className="flex min-h-full flex-col bg-[#F7F6F2] font-[family-name:var(--font-inter)] antialiased">
+      <body className="flex min-h-full flex-col font-sans antialiased text-ink bg-bg">
         <AuthProvider>
           <Navbar />
           <main className="flex-1">{children}</main>

@@ -57,6 +57,16 @@ public class V1AgencyService {
         return saved;
     }
 
+    @Transactional
+    public void saveGithubUsername(UUID agencyId, String githubUsername) {
+        agencyRepo.findById(agencyId).ifPresent(agency -> {
+            agency.updateProfile(
+                    agency.getName(), agency.getNiche(), agency.getWebsiteUrl(),
+                    agency.getDescription(), agency.getBookingUrl(), githubUsername, agency.isPublic());
+            agencyRepo.save(agency);
+        });
+    }
+
     @Transactional(readOnly = true)
     public AgencyProfile getAgencyForUserOrThrow(UUID userId) {
         return agencyRepo.findByUserId(userId)

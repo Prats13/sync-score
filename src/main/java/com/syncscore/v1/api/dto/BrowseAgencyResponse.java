@@ -7,11 +7,11 @@ import java.util.UUID;
 public record BrowseAgencyResponse(
         String slug,
         UUID agencyId,
-        String name,
+        String agencyName,
         String niche,
         String websiteUrl,
         String bookingUrl,
-        Integer score,
+        Integer totalScore,
         SyncTier tier,
         VerificationLabel verificationLabel
 ) {}
