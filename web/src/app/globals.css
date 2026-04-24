@@ -1,45 +1,119 @@
 @import "tailwindcss";
 
-/* ── Design tokens (from all_layer_styling.css) ──────────────────────── */
+/* ── V2 Design Tokens ─────────────────────────────────────────────────── */
 :root {
-  /* Page */
-  --color-bg:             #F7F6F2;
-  --color-surface:        #F6F6F3;
-  --color-surface-white:  #FFFFFF;
-  --color-ink:            #000000;
-  --color-muted:          #6B6B6B;
-  --color-border:         #D7D3CB;
+  --color-bg: #F7F6F2;
+  --color-ink: #000000;
+  --color-surface-1: #FFFFFF;
+  --color-surface-2: #FFFFFF;
+  --color-surface-inset: #F6F6F3;
+  --color-hairline: #e5e5e5;
+  --color-hairline-strong: #D7D3CB;
+  --color-muted: #6B6B6B;
+  --color-trust: #000000;
+  --color-trust-text: #000000;
+  --color-trust-bg: #F6F6F3;
+  --color-trust-border: #000000;
+  --color-verified: #2ECC71;
+  --color-verified-bg: #EBFFF2;
+  --color-mismatch: #EF4444;
+  --color-mismatch-bg: #FEF2F2;
+  --color-declared: #F59E0B;
+  --color-declared-bg: #FFF8E1;
 
-  /* CTA button — near-black */
-  --color-cta:            #10100F;
-  --color-cta-text:       #FFFFFF;
-
-  /* Trust / verified palette */
-  --color-verified-bg:      #EBFFF2;
-  --color-verified-border:  #2ECC71;
-  --color-verified-text:    #279455;
+  /* Font fallbacks for inline styles */
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), monospace;
+  --font-display: var(--font-instrument), serif;
 
   /* shadcn/ui compatibility layer */
-  --background:   var(--color-bg);
-  --foreground:   var(--color-ink);
-  --card:         var(--color-surface-white);
+  --background: var(--color-bg);
+  --foreground: var(--color-ink);
+  --card: var(--color-surface-2);
   --card-foreground: var(--color-ink);
-  --border:       var(--color-border);
-  --input:        var(--color-border);
-  --ring:         var(--color-cta);
-  --muted:        var(--color-surface);
+  --border: var(--color-hairline-strong);
+  --input: var(--color-hairline-strong);
+  --ring: var(--color-trust);
+  --muted: var(--color-surface-inset);
   --muted-foreground: var(--color-muted);
-  --primary:      var(--color-cta);
-  --primary-foreground: var(--color-cta-text);
-  --radius: 0.75rem;
+  --primary: var(--color-trust);
+  --primary-foreground: var(--color-bg);
+  --radius: 14px;
+}
+
+[data-theme="dark"] {
+  --color-bg: #09090b;
+  --color-ink: #fafafa;
+  --color-surface-1: #18181b;
+  --color-surface-2: #18181b;
+  --color-surface-inset: #09090b;
+  --color-hairline: #27272a;
+  --color-hairline-strong: #3f3f46;
+  --color-muted: #a1a1aa;
+  --color-trust: #fafafa;
+  --color-trust-text: #fafafa;
+  --color-trust-bg: #27272a;
+  --color-trust-border: #fafafa;
+  --color-verified: #22c55e;
+  --color-verified-bg: #14532d;
+  --color-mismatch: #ef4444;
+  --color-mismatch-bg: #7f1d1d;
+  --color-declared: #f59e0b;
+  --color-declared-bg: #78350f;
+  
+  --background: var(--color-bg);
+  --foreground: var(--color-ink);
+  --card: var(--color-surface-2);
+  --card-foreground: var(--color-ink);
+  --border: var(--color-hairline-strong);
+  --input: var(--color-hairline-strong);
+  --ring: var(--color-trust);
+  --muted: var(--color-surface-inset);
+  --muted-foreground: var(--color-muted);
+  --primary: var(--color-trust);
+  --primary-foreground: var(--color-bg);
 }
 
 @theme inline {
   --color-background: var(--color-bg);
   --color-foreground: var(--color-ink);
-  --font-sans: var(--font-inter);
-  --font-display: var(--font-dm-serif-display);
-  --font-serif: var(--font-dm-serif-text);
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), monospace;
+  --font-display: var(--font-instrument), serif;
+
+  --color-bg: var(--color-bg);
+  --color-ink: var(--color-ink);
+  --color-surface-1: var(--color-surface-1);
+  --color-surface-2: var(--color-surface-2);
+  --color-surface-inset: var(--color-surface-inset);
+  --color-hairline: var(--color-hairline);
+  --color-hairline-strong: var(--color-hairline-strong);
+  --color-trust: var(--color-trust);
+  --color-trust-text: var(--color-trust-text);
+  --color-trust-bg: var(--color-trust-bg);
+  --color-trust-border: var(--color-trust-border);
+  --color-verified: var(--color-verified);
+  --color-verified-bg: var(--color-verified-bg);
+  --color-mismatch: var(--color-mismatch);
+  --color-mismatch-bg: var(--color-mismatch-bg);
+  --color-declared: var(--color-declared);
+  --color-declared-bg: var(--color-declared-bg);
+
+  /* shadcn/ui theme variables */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-muted: var(--color-muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
 }
 
 /* ── Base reset ───────────────────────────────────────────────────────── */
@@ -57,28 +131,55 @@ html {
 body {
   background-color: var(--color-bg);
   color: var(--color-ink);
-  font-family: var(--font-inter), system-ui, sans-serif;
+  font-family: var(--font-sans);
   min-height: 100vh;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* ── Tier badge classes (dynamic class workaround) ────────────────────── */
+/* ── UI Utilities ─────────────────────────────────────────────────────── */
+.card-base {
+  background-color: var(--color-surface-2);
+  border: 1px solid var(--color-hairline-strong);
+  border-radius: 22px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  transition: all 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card-base:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  border-color: var(--color-trust-border);
+}
+
+.ss-grid-bg-sm {
+  background-image: linear-gradient(var(--color-hairline) 1px, transparent 1px), linear-gradient(90deg, var(--color-hairline) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--color-hairline-strong);
+  color: var(--color-muted);
+  width: fit-content;
+}
+
+/* Tiers */
 .tier-WRAPPER {
-  background-color: #F3F4F6;
-  color: #374151;
+  background-color: var(--color-surface-inset);
+  color: var(--color-muted);
 }
 .tier-BUILDER {
-  background-color: #DBEAFE;
-  color: #1D4ED8;
+  background-color: var(--color-trust-bg);
+  color: var(--color-trust-text);
+  border: 1px solid var(--color-trust-border);
 }
 .tier-EXPERT {
   background-color: var(--color-verified-bg);
-  color: var(--color-verified-text);
-  border: 1px solid var(--color-verified-border);
-}
-
-/* ── Utility: card ────────────────────────────────────────────────────── */
-.card-base {
-  background-color: var(--color-surface);
-  border: 2px solid var(--color-border);
-  border-radius: 23px;
+  color: var(--color-verified);
+  border: 1px solid var(--color-verified);
 }

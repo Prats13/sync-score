@@ -39,14 +39,14 @@ interface ProofModalProps {
 }
 
 const ARCH_STATUS_LABELS: Record<string, { label: string; badge: string }> = {
-  VERIFIED:          { label: "Architecture Verified",  badge: "bg-[#EBFFF2] text-[#279455] border-[#2ECC71]" },
+  VERIFIED:          { label: "Architecture Verified",  badge: "bg-verified-bg text-verified border-[#2ECC71]" },
   UNDER_REVIEW:      { label: "Under Review",           badge: "bg-amber-50 text-amber-700 border-amber-300" },
   EVIDENCE_MISMATCH: { label: "Evidence Mismatch",      badge: "bg-red-50 text-red-600 border-red-300" },
-  FRESHNESS_LOW:     { label: "Freshness Low",          badge: "bg-[#F6F6F3] text-[#6B6B6B] border-[#D7D3CB]" },
+  FRESHNESS_LOW:     { label: "Freshness Low",          badge: "bg-surface-inset text-muted border-hairline-strong" },
 }
 
 const CONFIDENCE_LABELS: Record<string, { label: string; color: string }> = {
-  HIGH:   { label: "High confidence",   color: "text-[#279455]" },
+  HIGH:   { label: "High confidence",   color: "text-verified" },
   MEDIUM: { label: "Medium confidence", color: "text-amber-600" },
   LOW:    { label: "Low confidence",    color: "text-red-500" },
 }
@@ -106,34 +106,34 @@ export function ProofModal({ open, onClose, profile, archProfile, lastScanDate }
         role="dialog"
         aria-modal="true"
         aria-label={`Verification proof for ${agency.name}`}
-        className="fixed inset-x-0 bottom-0 z-50 max-h-[90vh] overflow-y-auto rounded-t-[32px] bg-white shadow-2xl md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-[23px] md:max-h-[85vh] md:w-full md:max-w-2xl"
+        className="fixed inset-x-0 bottom-0 z-50 max-h-[90vh] overflow-y-auto rounded-t-[32px] bg-surface-1 shadow-2xl md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-[23px] md:max-h-[85vh] md:w-full md:max-w-2xl"
         style={{ animation: "slideUp 0.25s ease" }}
       >
         {/* Drag handle (mobile) */}
         <div className="flex justify-center pt-3 pb-1 md:hidden">
-          <div className="h-1 w-10 rounded-full bg-[#D7D3CB]" />
+          <div className="h-1 w-10 rounded-full bg-hairline-strong" />
         </div>
 
         <div className="p-6 md:p-8">
           {/* Header */}
           <div className="flex items-start justify-between gap-4 mb-6">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-[#6B6B6B] mb-1">
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted mb-1">
                 Verification proof
               </p>
               <h2
-                className="text-2xl text-[#000000]"
-                style={{ fontFamily: "var(--font-dm-serif-display)" }}
+                className="text-2xl text-ink"
+                style={{ fontFamily: "var(--font-display)" }}
               >
                 {agency.name}
               </h2>
               {agency.niche && (
-                <p className="mt-0.5 text-sm text-[#6B6B6B]">{agency.niche}</p>
+                <p className="mt-0.5 text-sm text-muted">{agency.niche}</p>
               )}
             </div>
             <button
               onClick={onClose}
-              className="shrink-0 flex h-8 w-8 items-center justify-center rounded-full border-2 border-[#D7D3CB] text-[#6B6B6B] transition-colors hover:border-[#10100F] hover:text-[#000000]"
+              className="shrink-0 flex h-8 w-8 items-center justify-center rounded-full border-2 border-hairline-strong text-muted transition-colors hover:border-trust-border hover:text-ink"
               aria-label="Close"
             >
               ✕
@@ -141,13 +141,13 @@ export function ProofModal({ open, onClose, profile, archProfile, lastScanDate }
           </div>
 
           {/* Stack score summary */}
-          <div className="mb-5 rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-5">
+          <div className="mb-5 rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-5">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-[#6B6B6B]">Stack score</p>
+                <p className="text-xs font-semibold uppercase tracking-widest text-muted">Stack score</p>
                 <div className="mt-1.5 flex items-center gap-3">
                   {score.totalScore != null && (
-                    <span className="text-3xl font-bold tabular-nums text-[#000000]">
+                    <span className="text-3xl font-bold tabular-nums text-ink">
                       {score.totalScore}
                     </span>
                   )}
@@ -164,14 +164,14 @@ export function ProofModal({ open, onClose, profile, archProfile, lastScanDate }
                 <span className={[
                   "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold",
                   verificationLabel === "GITHUB_VERIFIED"
-                    ? "border-[#2ECC71] bg-[#EBFFF2] text-[#279455]"
+                    ? "border-[#2ECC71] bg-verified-bg text-verified"
                     : verificationLabel === "SELF_REPORTED"
                     ? "border-gray-200 bg-gray-50 text-gray-500"
-                    : "border-[#D7D3CB] bg-[#F6F6F3] text-[#6B6B6B]",
+                    : "border-hairline-strong bg-surface-inset text-muted",
                 ].join(" ")}>
                   <span className={[
                     "h-1.5 w-1.5 rounded-full",
-                    verificationLabel === "GITHUB_VERIFIED" ? "bg-[#2ECC71]"
+                    verificationLabel === "GITHUB_VERIFIED" ? "bg-verified"
                     : verificationLabel === "SELF_REPORTED" ? "bg-gray-400"
                     : "bg-gray-300",
                   ].join(" ")} />
@@ -180,7 +180,7 @@ export function ProofModal({ open, onClose, profile, archProfile, lastScanDate }
                     : "Unverified"}
                 </span>
                 {lastScanDate && (
-                  <p className="mt-1 text-[10px] text-[#6B6B6B]">
+                  <p className="mt-1 text-[10px] text-muted">
                     Scanned {formatDate(lastScanDate)}
                   </p>
                 )}
@@ -190,8 +190,8 @@ export function ProofModal({ open, onClose, profile, archProfile, lastScanDate }
 
           {/* Architecture layer (V2) */}
           {archMeta && (
-            <div className="mb-5 rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-5">
-              <p className="text-xs font-semibold uppercase tracking-widest text-[#6B6B6B] mb-3">Architecture</p>
+            <div className="mb-5 rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-5">
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted mb-3">Architecture</p>
               <div className="flex flex-wrap gap-2">
                 <span className={[
                   "rounded-full border px-3 py-1 text-xs font-semibold",
@@ -205,12 +205,12 @@ export function ProofModal({ open, onClose, profile, archProfile, lastScanDate }
                   </span>
                 )}
                 {sourceLabel && (
-                  <span className="rounded-full border border-[#D7D3CB] bg-white px-3 py-1 text-[10px] text-[#6B6B6B]">
+                  <span className="rounded-full border border-hairline-strong bg-surface-1 px-3 py-1 text-[10px] text-muted">
                     {sourceLabel}
                   </span>
                 )}
                 {archProfile?.lastVerifiedAt && (
-                  <span className="rounded-full border border-[#D7D3CB] bg-white px-3 py-1 text-[10px] text-[#6B6B6B]">
+                  <span className="rounded-full border border-hairline-strong bg-surface-1 px-3 py-1 text-[10px] text-muted">
                     Verified {formatDate(archProfile.lastVerifiedAt)}
                   </span>
                 )}
@@ -221,7 +221,7 @@ export function ProofModal({ open, onClose, profile, archProfile, lastScanDate }
           {/* Category evidence grid */}
           {categories.length > 0 && (
             <div className="mb-5">
-              <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-[#6B6B6B]">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-muted">
                 Evidence — {verifiedCount} of {categories.length} capabilities verified
               </p>
               <div className="grid gap-2 sm:grid-cols-2">
@@ -230,11 +230,11 @@ export function ProofModal({ open, onClose, profile, archProfile, lastScanDate }
                   return (
                     <div
                       key={c.category}
-                      className="flex items-center justify-between rounded-xl border-2 border-[#D7D3CB] bg-white p-3"
+                      className="flex items-center justify-between rounded-xl border-2 border-hairline-strong bg-surface-1 p-3"
                     >
                       <div className="min-w-0">
-                        <p className="text-xs font-semibold text-[#000000]">{c.category}</p>
-                        <p className="text-[10px] text-[#6B6B6B]">{c.points}/{c.cap} pts</p>
+                        <p className="text-xs font-semibold text-ink">{c.category}</p>
+                        <p className="text-[10px] text-muted">{c.points}/{c.cap} pts</p>
                       </div>
                       <EvidenceBadge grade={grade} />
                     </div>
@@ -247,14 +247,14 @@ export function ProofModal({ open, onClose, profile, archProfile, lastScanDate }
           {/* Detected packages */}
           {stack.length > 0 && (
             <div className="mb-5">
-              <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-[#6B6B6B]">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-muted">
                 Detected packages ({stack.length})
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {stack.map((pkg) => (
                   <span
                     key={pkg.packageName}
-                    className="rounded-full border border-[#D7D3CB] bg-[#F6F6F3] px-2.5 py-1 text-[10px] font-medium text-[#000000]"
+                    className="rounded-full border border-hairline-strong bg-surface-inset px-2.5 py-1 text-[10px] font-medium text-ink"
                   >
                     {pkg.packageName}
                   </span>
@@ -264,7 +264,7 @@ export function ProofModal({ open, onClose, profile, archProfile, lastScanDate }
           )}
 
           {/* Disclaimer */}
-          <p className="text-[10px] text-[#6B6B6B] border-t border-[#D7D3CB] pt-4">
+          <p className="text-[10px] text-muted border-t border-hairline-strong pt-4">
             This proof is based on manifest analysis and available architecture signals.
             SyncScore V2 verifies architecture evidence — not live system behaviour or performance.
             Ruleset: {score.rulesetVersion ?? "syncscore_v1"}

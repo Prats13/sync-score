@@ -23,7 +23,7 @@ export function StackChip({ packageName, category, pointsAwarded, className }: S
     <span
       className={cn(
         "inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-medium",
-        "bg-white transition-all duration-150 hover:-translate-y-0.5 hover:shadow-sm",
+        "bg-surface-1 transition-all duration-150 hover:-translate-y-0.5 hover:shadow-sm",
         colorClass,
         className,
       )}

@@ -77,7 +77,7 @@ export default function PublicAgencyProfilePage({
       <div className="mx-auto max-w-4xl px-6 py-12">
         <div className="space-y-4">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-28 animate-pulse rounded-[23px] bg-[#F6F6F3]" />
+            <div key={i} className="h-28 animate-pulse rounded-[23px] bg-surface-inset" />
           ))}
         </div>
       </div>
@@ -92,17 +92,17 @@ export default function PublicAgencyProfilePage({
     <>
       <div className="mx-auto max-w-4xl px-6 py-12">
         {/* ── Header ────────────────────────────────────────────────────── */}
-        <div className="rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-8 mb-6">
+        <div className="rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-8 mb-6">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h1
-                className="text-3xl text-[#000000]"
-                style={{ fontFamily: "var(--font-dm-serif-display)" }}
+                className="text-3xl text-ink"
+                style={{ fontFamily: "var(--font-display)" }}
               >
                 {agency.name}
               </h1>
               {agency.niche && (
-                <p className="mt-1 text-[#6B6B6B]">{agency.niche}</p>
+                <p className="mt-1 text-muted">{agency.niche}</p>
               )}
             </div>
 
@@ -110,15 +110,15 @@ export default function PublicAgencyProfilePage({
             <button
               id="view-proof-btn"
               onClick={() => setProofOpen(true)}
-              className="flex items-center gap-2 rounded-full border-2 border-[#2ECC71] bg-[#EBFFF2] px-4 py-1.5 text-sm font-semibold text-[#279455] transition-colors hover:bg-[#d4fce4]"
+              className="flex items-center gap-2 rounded-full border-2 border-[#2ECC71] bg-verified-bg px-4 py-1.5 text-sm font-semibold text-verified transition-colors hover:bg-[#d4fce4]"
             >
-              <span className="h-1.5 w-1.5 rounded-full bg-[#2ECC71]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-verified" />
               View proof
             </button>
           </div>
 
           {agency.description && (
-            <p className="mt-5 text-sm leading-relaxed text-[#6B6B6B]">{agency.description}</p>
+            <p className="mt-5 text-sm leading-relaxed text-muted">{agency.description}</p>
           )}
 
           <div className="mt-6">
@@ -139,7 +139,7 @@ export default function PublicAgencyProfilePage({
                 href={agency.websiteUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border-2 border-[#D7D3CB] px-5 py-1.5 text-sm font-medium text-[#000000] transition-colors hover:border-[#10100F]"
+                className="rounded-full border-2 border-hairline-strong px-5 py-1.5 text-sm font-medium text-ink transition-colors hover:border-trust-border"
               >
                 Website ↗
               </a>
@@ -149,7 +149,7 @@ export default function PublicAgencyProfilePage({
                 href={agency.bookingUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full bg-[#10100F] px-5 py-1.5 text-sm font-medium text-white transition-opacity hover:opacity-80"
+                className="rounded-full bg-trust px-5 py-1.5 text-sm font-medium text-bg transition-opacity hover:opacity-80"
               >
                 Book a call
               </a>
@@ -160,8 +160,8 @@ export default function PublicAgencyProfilePage({
         <div className="grid gap-6 lg:grid-cols-2">
           {/* ── Score breakdown ───────────────────────────────────────── */}
           {categories.length > 0 && (
-            <div className="rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-6">
-              <h2 className="mb-5 text-lg font-semibold text-[#000000]">Score breakdown</h2>
+            <div className="rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-6">
+              <h2 className="mb-5 text-lg font-semibold text-ink">Score breakdown</h2>
               <div className="space-y-4">
                 {categories.map((c) => (
                   <CategoryBar
@@ -173,9 +173,9 @@ export default function PublicAgencyProfilePage({
                 ))}
               </div>
               {score.totalScore != null && (
-                <div className="mt-6 flex items-center justify-between border-t-2 border-[#D7D3CB] pt-4">
-                  <span className="text-sm font-medium text-[#6B6B6B]">Total score</span>
-                  <span className="text-2xl font-bold tabular-nums text-[#000000]">
+                <div className="mt-6 flex items-center justify-between border-t-2 border-hairline-strong pt-4">
+                  <span className="text-sm font-medium text-muted">Total score</span>
+                  <span className="text-2xl font-bold tabular-nums text-ink">
                     {score.totalScore}
                   </span>
                 </div>
@@ -186,12 +186,12 @@ export default function PublicAgencyProfilePage({
           {/* ── Strengths & Considerations ───────────────────────────── */}
           <div className="space-y-4">
             {strengths.length > 0 && (
-              <div className="rounded-[23px] border-2 border-[#2ECC71] bg-[#EBFFF2] p-6">
-                <h2 className="mb-3 text-base font-semibold text-[#279455]">Strengths</h2>
+              <div className="rounded-[23px] border-2 border-[#2ECC71] bg-verified-bg p-6">
+                <h2 className="mb-3 text-base font-semibold text-verified">Strengths</h2>
                 <ul className="space-y-1.5">
                   {strengths.map((s) => (
-                    <li key={s.category} className="flex items-center gap-2 text-sm text-[#000000]">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#2ECC71]" />
+                    <li key={s.category} className="flex items-center gap-2 text-sm text-ink">
+                      <span className="h-1.5 w-1.5 rounded-full bg-verified" />
                       {s.category} ({s.points}/{s.cap} pts)
                     </li>
                   ))}
@@ -200,12 +200,12 @@ export default function PublicAgencyProfilePage({
             )}
 
             {considerations.length > 0 && (
-              <div className="rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-6">
-                <h2 className="mb-3 text-base font-semibold text-[#6B6B6B]">Considerations</h2>
+              <div className="rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-6">
+                <h2 className="mb-3 text-base font-semibold text-muted">Considerations</h2>
                 <ul className="space-y-1.5">
                   {considerations.map((c) => (
-                    <li key={c.category} className="flex items-center gap-2 text-sm text-[#6B6B6B]">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#D7D3CB]" />
+                    <li key={c.category} className="flex items-center gap-2 text-sm text-muted">
+                      <span className="h-1.5 w-1.5 rounded-full bg-hairline-strong" />
                       No {c.category} layer detected
                     </li>
                   ))}
@@ -217,8 +217,8 @@ export default function PublicAgencyProfilePage({
 
         {/* ── Detected stack ────────────────────────────────────────────── */}
         {stack.length > 0 && (
-          <div className="mt-6 rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-6">
-            <h2 className="mb-4 text-lg font-semibold text-[#000000]">Detected stack</h2>
+          <div className="mt-6 rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-6">
+            <h2 className="mb-4 text-lg font-semibold text-ink">Detected stack</h2>
             <div className="flex flex-wrap gap-2">
               {stack.map((pkg) => (
                 <StackChip
@@ -230,7 +230,7 @@ export default function PublicAgencyProfilePage({
               ))}
             </div>
             {score.rulesetVersion && (
-              <p className="mt-4 text-xs text-[#6B6B6B]">
+              <p className="mt-4 text-xs text-muted">
                 Ruleset: {score.rulesetVersion}
               </p>
             )}
@@ -239,9 +239,9 @@ export default function PublicAgencyProfilePage({
 
         {/* ── Architecture Evidence Hierarchy ─────────────────────────────── */}
         {categories.length > 0 && (
-          <div className="mt-6 rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-6">
+          <div className="mt-6 rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-6">
             <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-[#000000]">Architecture evidence</h2>
+              <h2 className="text-lg font-semibold text-ink">Architecture evidence</h2>
               <div className="flex flex-wrap gap-2">
                 <EvidenceBadge grade="VERIFIED" />
                 <EvidenceBadge grade="DECLARED" />
@@ -254,12 +254,12 @@ export default function PublicAgencyProfilePage({
                 return (
                   <div
                     key={c.category}
-                    className="rounded-xl border-2 border-[#D7D3CB] bg-white p-4"
+                    className="rounded-xl border-2 border-hairline-strong bg-surface-1 p-4"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold text-[#000000]">{c.category}</p>
-                        <p className="mt-0.5 text-xs text-[#6B6B6B]">
+                        <p className="text-sm font-semibold text-ink">{c.category}</p>
+                        <p className="mt-0.5 text-xs text-muted">
                           {CAPABILITY_DESCRIPTIONS[c.category] ?? ""}
                         </p>
                       </div>
@@ -267,25 +267,25 @@ export default function PublicAgencyProfilePage({
                     </div>
                     {grade !== "NOT_TESTED" && (
                       <div className="mt-3 flex items-center gap-2">
-                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#D7D3CB]">
+                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-hairline-strong">
                           <div
                             className={[
                               "h-full rounded-full transition-all",
-                              grade === "VERIFIED" ? "bg-[#2ECC71]" : "bg-[#F59E0B]",
+                              grade === "VERIFIED" ? "bg-verified" : "bg-[#F59E0B]",
                             ].join(" ")}
                             style={{ width: `${Math.round((c.points / c.cap) * 100)}%` }}
                           />
                         </div>
-                        <span className="text-xs text-[#6B6B6B]">{c.points}/{c.cap}</span>
+                        <span className="text-xs text-muted">{c.points}/{c.cap}</span>
                       </div>
                     )}
                   </div>
                 )
               })}
             </div>
-            <p className="mt-4 text-xs text-[#6B6B6B]">
+            <p className="mt-4 text-xs text-muted">
               Evidence grades reflect signal strength from manifest analysis.{" "}
-              <Link href="/how-it-works" className="underline hover:text-[#000000]">
+              <Link href="/how-it-works" className="underline hover:text-ink">
                 How this works →
               </Link>
             </p>
@@ -293,17 +293,17 @@ export default function PublicAgencyProfilePage({
         )}
 
         {/* ── Buyer CTA ───────────────────────────────────────────────────── */}
-        <div className="mt-6 rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-6">
+        <div className="mt-6 rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-semibold text-[#000000]">Want a plain-English summary?</p>
-              <p className="mt-0.5 text-xs text-[#6B6B6B]">
+              <p className="text-sm font-semibold text-ink">Want a plain-English summary?</p>
+              <p className="mt-0.5 text-xs text-muted">
                 See strengths, risk flags, and questions to ask before signing.
               </p>
             </div>
             <Link
               href={`/agents/${slug}/report`}
-              className="rounded-full border-2 border-[#D7D3CB] px-5 py-1.5 text-sm font-medium text-[#000000] transition-colors hover:border-[#10100F]"
+              className="rounded-full border-2 border-hairline-strong px-5 py-1.5 text-sm font-medium text-ink transition-colors hover:border-trust-border"
             >
               View buyer report →
             </Link>

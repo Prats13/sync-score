@@ -1,6 +1,7 @@
 package com.syncscore.v2.scanner;
 
 import java.time.Instant;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.springframework.stereotype.Component;
@@ -34,7 +35,9 @@ public class StructuralSignalAggregator {
             totalCommits += s.commitCount90d();
             if (s.contributorCount() > maxContributors) maxContributors = s.contributorCount();
             if (s.repoCreatedAt() != null) {
-                long ageMonths = Math.max(0, ChronoUnit.MONTHS.between(s.repoCreatedAt(), now));
+                long ageMonths = Math.max(0, ChronoUnit.MONTHS.between(
+                        s.repoCreatedAt().atZone(ZoneOffset.UTC).toLocalDate(),
+                        now.atZone(ZoneOffset.UTC).toLocalDate()));
                 if (ageMonths > oldestRepoAgeMonths) oldestRepoAgeMonths = ageMonths;
             }
             if (s.maxFolderDepth() > maxDepth) maxDepth = s.maxFolderDepth();

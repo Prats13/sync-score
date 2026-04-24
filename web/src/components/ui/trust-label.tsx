@@ -7,9 +7,9 @@ const trustLabelVariants = cva(
   {
     variants: {
       label: {
-        GITHUB_VERIFIED: "bg-[#EBFFF2] text-[#279455] border-[#2ECC71]",
+        GITHUB_VERIFIED: "bg-verified-bg text-verified border-[#2ECC71]",
         SELF_REPORTED: "bg-gray-50 text-gray-500 border-gray-200",
-        UNVERIFIED: "bg-[#F6F6F3] text-[#6B6B6B] border-[#D7D3CB]",
+        UNVERIFIED: "bg-surface-inset text-muted border-hairline-strong",
       },
     },
     defaultVariants: {
@@ -25,7 +25,7 @@ const LABEL_TEXT: Record<VerificationLabel, string> = {
 }
 
 const LABEL_DOT: Record<VerificationLabel, string> = {
-  GITHUB_VERIFIED: "bg-[#2ECC71]",
+  GITHUB_VERIFIED: "bg-verified",
   SELF_REPORTED: "bg-gray-400",
   UNVERIFIED: "bg-gray-300",
 }

@@ -50,14 +50,23 @@ public class GitHubUsernameScanner {
             TreeResponse tree = gitHubApi.fetchRepoTreeRecursive(owner, name, branch);
             List<String> packageJsonPaths = new ArrayList<>();
             List<String> requirementsPaths = new ArrayList<>();
+            List<String> pyprojectPaths = new ArrayList<>();
+            List<String> setupCfgPaths = new ArrayList<>();
+            List<String> pipfilePaths = new ArrayList<>();
 
             for (TreeItem item : tree.tree() == null ? List.<TreeItem>of() : tree.tree()) {
                 if (item == null || !"blob".equalsIgnoreCase(item.type()) || item.path() == null) continue;
                 String lower = item.path().toLowerCase(Locale.ROOT);
                 if (lower.endsWith("package.json")) {
                     packageJsonPaths.add(item.path());
-                } else if (lower.endsWith("requirements.txt")) {
+                } else if (lower.endsWith("requirements.txt") || lower.matches(".*requirements[-_][\\w]+\\.txt")) {
                     requirementsPaths.add(item.path());
+                } else if (lower.endsWith("pyproject.toml")) {
+                    pyprojectPaths.add(item.path());
+                } else if (lower.endsWith("setup.cfg")) {
+                    setupCfgPaths.add(item.path());
+                } else if (lower.endsWith("pipfile") && !lower.endsWith(".lock")) {
+                    pipfilePaths.add(item.path());
                 }
             }
 
@@ -77,6 +86,33 @@ public class GitHubUsernameScanner {
                 if (content != null) {
                     Set<String> pkgs = extractor.extractPackages(ManifestType.REQUIREMENTS_TXT, content);
                     manifestsFound.add(new GitHubScanResult.ManifestFile(ManifestType.REQUIREMENTS_TXT, path, pkgs));
+                    allPackages.addAll(pkgs);
+                }
+            }
+
+            for (String path : pyprojectPaths) {
+                String content = gitHubApi.fetchFileContent(owner, name, path, branch);
+                if (content != null) {
+                    Set<String> pkgs = extractor.extractPackages(ManifestType.PYPROJECT_TOML, content);
+                    manifestsFound.add(new GitHubScanResult.ManifestFile(ManifestType.PYPROJECT_TOML, path, pkgs));
+                    allPackages.addAll(pkgs);
+                }
+            }
+
+            for (String path : setupCfgPaths) {
+                String content = gitHubApi.fetchFileContent(owner, name, path, branch);
+                if (content != null) {
+                    Set<String> pkgs = extractor.extractPackages(ManifestType.SETUP_CFG, content);
+                    manifestsFound.add(new GitHubScanResult.ManifestFile(ManifestType.SETUP_CFG, path, pkgs));
+                    allPackages.addAll(pkgs);
+                }
+            }
+
+            for (String path : pipfilePaths) {
+                String content = gitHubApi.fetchFileContent(owner, name, path, branch);
+                if (content != null) {
+                    Set<String> pkgs = extractor.extractPackages(ManifestType.PIPFILE, content);
+                    manifestsFound.add(new GitHubScanResult.ManifestFile(ManifestType.PIPFILE, path, pkgs));
                     allPackages.addAll(pkgs);
                 }
             }

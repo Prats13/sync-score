@@ -9,7 +9,7 @@ const scoreBadgeVariants = cva(
       tier: {
         WRAPPER: "bg-gray-100 text-gray-700 border-gray-200",
         BUILDER: "bg-blue-50 text-blue-700 border-blue-200",
-        EXPERT: "bg-[#EBFFF2] text-[#279455] border-[#2ECC71]",
+        EXPERT: "bg-verified-bg text-verified border-[#2ECC71]",
       },
     },
     defaultVariants: {

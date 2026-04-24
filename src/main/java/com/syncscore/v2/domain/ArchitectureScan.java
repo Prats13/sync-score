@@ -53,6 +53,15 @@ public class ArchitectureScan {
     @Column(name = "ruleset_version", nullable = false, length = 50)
     private String rulesetVersion;
 
+    @Column(name = "llm_score")
+    private Integer llmScore;
+
+    @Column(name = "llm_reasoning", columnDefinition = "text")
+    private String llmReasoning;
+
+    @Column(name = "llm_model_id", length = 500)
+    private String llmModelId;
+
     @Column(name = "error_message", columnDefinition = "text")
     private String errorMessage;
 
@@ -103,6 +112,9 @@ public class ArchitectureScan {
     public JsonNode getStructuralSignalsJson() { return structuralSignalsJson; }
     public JsonNode getSummaryJson() { return summaryJson; }
     public String getRulesetVersion() { return rulesetVersion; }
+    public Integer getLlmScore() { return llmScore; }
+    public String getLlmReasoning() { return llmReasoning; }
+    public String getLlmModelId() { return llmModelId; }
     public String getErrorMessage() { return errorMessage; }
     public Instant getCreatedAt() { return createdAt; }
     public Instant getStartedAt() { return startedAt; }
@@ -111,4 +123,7 @@ public class ArchitectureScan {
     public void setStructuralSignalsJson(JsonNode node) { this.structuralSignalsJson = node; }
     public void setSummaryJson(JsonNode node) { this.summaryJson = node; }
     public void setEvidenceSource(String evidenceSource) { this.evidenceSource = evidenceSource; }
+    public void setLlmScore(Integer llmScore) { this.llmScore = llmScore; }
+    public void setLlmReasoning(String llmReasoning) { this.llmReasoning = llmReasoning; }
+    public void setLlmModelId(String llmModelId) { this.llmModelId = llmModelId; }
 }

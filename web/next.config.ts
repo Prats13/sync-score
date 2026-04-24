@@ -1,6 +1,9 @@
 import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
+  // Allow local network devices to connect to HMR correctly
+  allowedDevOrigins: ["192.168.0.3"],
+  // Removed turbopack root
   async rewrites() {
     return {
       // beforeFiles runs before Next.js checks its own file-system routes.
@@ -11,7 +14,7 @@ const nextConfig: NextConfig = {
       beforeFiles: [
         {
           source: "/api/:path*",
-          destination: "http://localhost:9741/api/:path*",
+          destination: `${process.env.BACKEND_URL ?? "http://localhost:9741"}/api/:path*`,
         },
       ],
     }

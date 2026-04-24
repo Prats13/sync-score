@@ -122,7 +122,7 @@ export default function ScanResultPage({ params }: Props) {
   if (authLoading || (isLoading && !scan)) {
     return (
       <div className="mx-auto max-w-4xl px-6 py-12">
-        <div className="h-64 animate-pulse rounded-[23px] bg-[#F6F6F3]" />
+        <div className="h-64 animate-pulse rounded-[23px] bg-surface-inset" />
       </div>
     )
   }
@@ -146,28 +146,28 @@ export default function ScanResultPage({ params }: Props) {
           <div className="flex gap-1">
             <span className="h-3 w-3 rounded-full bg-red-400" />
             <span className="h-3 w-3 rounded-full bg-amber-400" />
-            <span className="h-3 w-3 rounded-full bg-[#2ECC71]" />
+            <span className="h-3 w-3 rounded-full bg-verified" />
           </div>
-          <span className="text-xs text-[#6B6B6B]">SyncScore Scanner</span>
+          <span className="text-xs text-muted">SyncScore Scanner</span>
           <div className="ml-auto flex items-center gap-2">
             <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
-            <span className="text-xs text-[#6B6B6B]">
+            <span className="text-xs text-muted">
               {scan?.status === "QUEUED" ? "Queued" : "Running"}
             </span>
           </div>
         </div>
         <div
           ref={terminalRef}
-          className="h-80 overflow-y-auto rounded-[23px] border-2 border-[#10100F] bg-[#10100F] p-6 font-mono text-sm text-[#F7F6F2]"
+          className="h-80 overflow-y-auto rounded-[23px] border-2 border-trust-border bg-trust p-6 font-mono text-sm text-bg"
         >
           {terminalLines.map((line, i) => (
-            <div key={i} className={line.includes("✓") ? "text-[#2ECC71]" : ""}>
+            <div key={i} className={line.includes("✓") ? "text-verified" : ""}>
               {line}
             </div>
           ))}
-          <div className="mt-1 inline-block h-4 w-2 animate-pulse bg-[#F7F6F2]" />
+          <div className="mt-1 inline-block h-4 w-2 animate-pulse bg-bg" />
         </div>
-        <p className="mt-4 text-center text-sm text-[#6B6B6B]">
+        <p className="mt-4 text-center text-sm text-muted">
           Scanning your stack… this usually takes under 30 seconds
         </p>
       </div>
@@ -204,15 +204,15 @@ export default function ScanResultPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-4xl px-6 py-12">
       {/* Header */}
-      <div className="mb-6 rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-8">
+      <div className="mb-6 rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#6B6B6B]">
+            <p className="text-xs font-semibold uppercase tracking-widest text-muted">
               Verification complete
             </p>
             {score && (
               <div className="mt-2 flex items-center gap-3">
-                <span className="text-5xl font-bold tabular-nums text-[#000000]">
+                <span className="text-5xl font-bold tabular-nums text-ink">
                   {score.totalScore}
                 </span>
                 <ScoreBadge tier={score.tier} />
@@ -222,7 +222,7 @@ export default function ScanResultPage({ params }: Props) {
           <div className="flex flex-col items-end gap-2">
             <TrustLabel label={scan?.verificationLabel ?? "UNVERIFIED"} />
             {scan?.rulesetVersion && (
-              <p className="text-xs text-[#6B6B6B]">{scan.rulesetVersion}</p>
+              <p className="text-xs text-muted">{scan.rulesetVersion}</p>
             )}
           </div>
         </div>
@@ -230,16 +230,16 @@ export default function ScanResultPage({ params }: Props) {
         <div className="mt-6 flex flex-wrap gap-3">
           {!published ? (
             <Button
-              className="rounded-full bg-[#10100F] text-white hover:bg-[#10100F]/80"
+              className="rounded-full bg-trust text-bg hover:bg-trust/80"
               onClick={handlePublish}
               disabled={publishing}
             >
               {publishing ? "Publishing…" : "Publish proof"}
             </Button>
           ) : (
-            <div className="flex items-center gap-2 rounded-full border-2 border-[#2ECC71] bg-[#EBFFF2] px-4 py-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#2ECC71]" />
-              <span className="text-sm font-medium text-[#279455]">Profile published</span>
+            <div className="flex items-center gap-2 rounded-full border-2 border-[#2ECC71] bg-verified-bg px-4 py-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-verified" />
+              <span className="text-sm font-medium text-verified">Profile published</span>
             </div>
           )}
           <Button asChild variant="outline">
@@ -251,16 +251,16 @@ export default function ScanResultPage({ params }: Props) {
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Score breakdown */}
         {categories.length > 0 && (
-          <div className="rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-6">
-            <h2 className="mb-5 text-lg font-semibold text-[#000000]">Score breakdown</h2>
+          <div className="rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-6">
+            <h2 className="mb-5 text-lg font-semibold text-ink">Score breakdown</h2>
             <div className="space-y-4">
               {categories.map((c) => (
                 <CategoryBar key={c.category} label={c.category} points={c.points} cap={c.cap} />
               ))}
             </div>
-            <div className="mt-6 flex items-center justify-between border-t-2 border-[#D7D3CB] pt-4">
-              <span className="text-sm font-medium text-[#6B6B6B]">Total score</span>
-              <span className="text-2xl font-bold tabular-nums text-[#000000]">
+            <div className="mt-6 flex items-center justify-between border-t-2 border-hairline-strong pt-4">
+              <span className="text-sm font-medium text-muted">Total score</span>
+              <span className="text-2xl font-bold tabular-nums text-ink">
                 {score?.totalScore ?? 0}
               </span>
             </div>
@@ -270,12 +270,12 @@ export default function ScanResultPage({ params }: Props) {
         {/* Strengths & Considerations */}
         <div className="space-y-4">
           {strengths.length > 0 && (
-            <div className="rounded-[23px] border-2 border-[#2ECC71] bg-[#EBFFF2] p-6">
-              <h2 className="mb-3 text-base font-semibold text-[#279455]">Strengths</h2>
+            <div className="rounded-[23px] border-2 border-[#2ECC71] bg-verified-bg p-6">
+              <h2 className="mb-3 text-base font-semibold text-verified">Strengths</h2>
               <ul className="space-y-1.5">
                 {strengths.map((s) => (
-                  <li key={s.category} className="flex items-center gap-2 text-sm text-[#000000]">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#2ECC71]" />
+                  <li key={s.category} className="flex items-center gap-2 text-sm text-ink">
+                    <span className="h-1.5 w-1.5 rounded-full bg-verified" />
                     {s.category} ({s.points}/{s.cap} pts)
                   </li>
                 ))}
@@ -283,12 +283,12 @@ export default function ScanResultPage({ params }: Props) {
             </div>
           )}
           {considerations.length > 0 && (
-            <div className="rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-6">
-              <h2 className="mb-3 text-base font-semibold text-[#6B6B6B]">Considerations</h2>
+            <div className="rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-6">
+              <h2 className="mb-3 text-base font-semibold text-muted">Considerations</h2>
               <ul className="space-y-1.5">
                 {considerations.map((c) => (
-                  <li key={c.category} className="flex items-center gap-2 text-sm text-[#6B6B6B]">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#D7D3CB]" />
+                  <li key={c.category} className="flex items-center gap-2 text-sm text-muted">
+                    <span className="h-1.5 w-1.5 rounded-full bg-hairline-strong" />
                     No {c.category} layer detected
                   </li>
                 ))}
@@ -300,8 +300,8 @@ export default function ScanResultPage({ params }: Props) {
 
       {/* Detected stack */}
       {packages.length > 0 && (
-        <div className="mt-6 rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-6">
-          <h2 className="mb-4 text-lg font-semibold text-[#000000]">Detected stack</h2>
+        <div className="mt-6 rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-6">
+          <h2 className="mb-4 text-lg font-semibold text-ink">Detected stack</h2>
           <div className="flex flex-wrap gap-2">
             {packages.map((pkg) => (
               <StackChip

@@ -254,9 +254,13 @@ public class V1ScanOrchestrator {
         GitHubScanResult scan = gitHubScanner.scanUsername(
                 plan.githubUsername,
                 requestedLimit,
-                (type, content) -> type == ManifestType.PACKAGE_JSON
-                        ? parsers.parsePackageJson(content)
-                        : parsers.parseRequirementsTxt(content)
+                (type, content) -> switch (type) {
+                    case PACKAGE_JSON     -> parsers.parsePackageJson(content);
+                    case PYPROJECT_TOML   -> parsers.parsePyprojectToml(content);
+                    case SETUP_CFG        -> parsers.parseSetupCfg(content);
+                    case PIPFILE          -> parsers.parsePipfile(content);
+                    default               -> parsers.parseRequirementsTxt(content);
+                }
         );
 
         List<RepositoryEvidence> repos = new ArrayList<>();
@@ -272,8 +276,10 @@ public class V1ScanOrchestrator {
                 if (mf.packages() == null) continue;
                 for (String pkg : mf.packages()) {
                     if (!StringUtils.hasText(pkg)) continue;
-                    allPackages.add(pkg.toLowerCase(Locale.ROOT));
-                    firstSeen.putIfAbsent(pkg.toLowerCase(Locale.ROOT), new SourceRef(fullName, mf.type(), mf.path()));
+                    // PEP 503: normalize underscores/dots to hyphens for consistent matching
+                    String normalized = pkg.toLowerCase(Locale.ROOT).replaceAll("[_.]", "-");
+                    allPackages.add(normalized);
+                    firstSeen.putIfAbsent(normalized, new SourceRef(fullName, mf.type(), mf.path()));
                 }
             }
         }
@@ -287,12 +293,17 @@ public class V1ScanOrchestrator {
         Set<String> allPackages = new HashSet<>();
 
         for (ManifestEvidence m : plan.manifests) {
-            Set<String> pkgs = m.manifestType == ManifestType.PACKAGE_JSON
-                    ? parsers.parsePackageJson(m.content)
-                    : parsers.parseRequirementsTxt(m.content);
+            Set<String> pkgs = switch (m.manifestType) {
+                case PACKAGE_JSON   -> parsers.parsePackageJson(m.content);
+                case PYPROJECT_TOML -> parsers.parsePyprojectToml(m.content);
+                case SETUP_CFG      -> parsers.parseSetupCfg(m.content);
+                case PIPFILE        -> parsers.parsePipfile(m.content);
+                default             -> parsers.parseRequirementsTxt(m.content);
+            };
             for (String p : pkgs) {
-                allPackages.add(p);
-                firstSeen.putIfAbsent(p, new SourceRef(null, m.manifestType, null));
+                String normalized = p.toLowerCase(Locale.ROOT).replaceAll("[_.]", "-");
+                allPackages.add(normalized);
+                firstSeen.putIfAbsent(normalized, new SourceRef(null, m.manifestType, null));
             }
         }
 
@@ -393,13 +404,25 @@ public class V1ScanOrchestrator {
                 if ("PACKAGE_JSON".equals(s) || "PACKAGE.JSON".equals(s) || "PACKAGE".equals(s)) {
                     return ManifestType.PACKAGE_JSON;
                 }
+                if ("PYPROJECT_TOML".equals(s) || "PYPROJECT.TOML".equals(s) || "PYPROJECT".equals(s)) {
+                    return ManifestType.PYPROJECT_TOML;
+                }
+                if ("SETUP_CFG".equals(s) || "SETUP.CFG".equals(s)) {
+                    return ManifestType.SETUP_CFG;
+                }
+                if ("PIPFILE".equals(s)) {
+                    return ManifestType.PIPFILE;
+                }
             }
         }
 
-        // Heuristic fallback: JSON-looking -> package.json
+        // Heuristic fallback: JSON-looking -> package.json; [project] header -> pyproject.toml
         String t = e.getContentText().stripLeading();
         if (t.startsWith("{")) {
             return ManifestType.PACKAGE_JSON;
+        }
+        if (t.startsWith("[project]") || t.startsWith("[tool.poetry]") || t.startsWith("[build-system]")) {
+            return ManifestType.PYPROJECT_TOML;
         }
         return ManifestType.REQUIREMENTS_TXT;
     }

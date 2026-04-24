@@ -1,5 +1,5 @@
 {
-  "rulesetVersion": "syncscore-v1-2026-04-14",
+  "rulesetVersion": "syncscore-v1-2026-04-24",
   "scoreMin": 0,
   "scoreMax": 100,
   "tiers": [
@@ -13,16 +13,12 @@
       "pointsEach": 15,
       "cap": 30,
       "packages": [
-        "langgraph",
-        "crewai",
-        "autogen",
-        "openai-agents",
-        "google-adk",
-        "smolagents",
-        "mastra",
-        "pydantic-ai",
-        "strands-agents",
-        "agno"
+        "langgraph", "crewai", "autogen", "openai-agents", "google-adk",
+        "smolagents", "mastra", "pydantic-ai", "strands-agents", "agno",
+        "langchain", "langchain-core", "langchain-community", "llamaindex",
+        "llama-index", "llama-index-core", "haystack-ai", "semantic-kernel",
+        "dspy-ai", "dspy", "flowise", "n8n", "temporal",
+        "prefect", "airflow", "celery", "rq"
       ]
     },
     {
@@ -30,14 +26,11 @@
       "pointsEach": 10,
       "cap": 20,
       "packages": [
-        "pinecone-client",
-        "weaviate-client",
-        "chromadb",
-        "qdrant-client",
-        "llama-index",
-        "pgvector",
-        "faiss-cpu",
-        "milvus"
+        "pinecone-client", "pinecone", "weaviate-client", "chromadb",
+        "qdrant-client", "pgvector", "faiss-cpu", "faiss-gpu", "milvus",
+        "pymilvus", "opensearch-py", "elasticsearch", "lancedb",
+        "txtai", "sentence-transformers", "tiktoken", "unstructured",
+        "pypdf", "pdfplumber", "docx2txt", "llmsherpa"
       ]
     },
     {
@@ -45,10 +38,21 @@
       "pointsEach": 8,
       "cap": 15,
       "packages": [
-        "mem0ai",
-        "redis",
-        "motorhead",
-        "zep-python"
+        "mem0ai", "mem0", "redis", "redis-py", "motorhead", "zep-python",
+        "upstash-redis", "pymongo", "motor", "aioredis",
+        "sqlalchemy", "prisma", "drizzle-orm", "typeorm"
+      ]
+    },
+    {
+      "name": "Voice & Multimodal",
+      "pointsEach": 10,
+      "cap": 20,
+      "packages": [
+        "elevenlabs", "deepgram", "assemblyai", "whisper", "openai-whisper",
+        "speechrecognition", "pyaudio", "pyttsx3", "gtts", "playsound",
+        "twilio", "vonage", "nexmo", "daily-python", "livekit",
+        "agora-python-sdk", "pipecat", "pipecat-ai", "retell-sdk",
+        "bland-ai", "vapi-python", "ultravox"
       ]
     },
     {
@@ -56,10 +60,9 @@
       "pointsEach": 10,
       "cap": 15,
       "packages": [
-        "nemoguardrails",
-        "guardrails-ai",
-        "rebuff",
-        "llm-guard"
+        "nemoguardrails", "guardrails-ai", "rebuff", "llm-guard",
+        "presidio-analyzer", "presidio-anonymizer", "detoxify",
+        "better-profanity", "profanity-filter", "openai-moderation"
       ]
     },
     {
@@ -67,25 +70,34 @@
       "pointsEach": 8,
       "cap": 15,
       "packages": [
-        "langfuse",
-        "langsmith",
-        "helicone",
-        "phoenix",
-        "openllmetry"
+        "langfuse", "langsmith", "helicone", "phoenix", "openllmetry",
+        "arize-phoenix", "traceloop", "weights-and-biases", "wandb",
+        "opentelemetry-api", "opentelemetry-sdk", "prometheus-client",
+        "sentry-sdk", "datadog", "dd-trace", "loguru", "structlog"
       ]
     },
     {
       "name": "Base SDK",
       "pointsEach": 2,
-      "cap": 5,
+      "cap": 10,
       "packages": [
-        "openai",
-        "anthropic",
-        "google-generativeai",
-        "cohere",
-        "mistralai"
+        "openai", "anthropic", "google-generativeai", "cohere", "mistralai",
+        "groq", "together", "replicate", "huggingface-hub", "transformers",
+        "boto3", "botocore", "azure-openai", "vertexai", "google-cloud-aiplatform",
+        "bedrock", "aws-sdk", "@aws-sdk/client-bedrock-runtime",
+        "@anthropic-ai/sdk", "openai-node", "@google-ai/generativelanguage"
+      ]
+    },
+    {
+      "name": "App Layer",
+      "pointsEach": 3,
+      "cap": 10,
+      "packages": [
+        "fastapi", "flask", "django", "starlette", "uvicorn", "gunicorn",
+        "express", "nextjs", "next", "nuxt", "remix", "nestjs",
+        "@nestjs/core", "fastify", "hono", "koa", "aiohttp",
+        "streamlit", "gradio", "chainlit", "panel"
       ]
     }
   ]
 }
-

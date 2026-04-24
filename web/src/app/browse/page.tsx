@@ -72,13 +72,10 @@ export default function BrowsePage() {
   return (
     <div className="mx-auto max-w-6xl px-6 py-12">
       <div className="mb-10">
-        <h1
-          className="text-4xl text-[#000000]"
-          style={{ fontFamily: "var(--font-dm-serif-display)" }}
-        >
+        <h1 className="text-4xl text-ink font-display">
           Browse verified agents
         </h1>
-        <p className="mt-2 text-[#6B6B6B]">
+        <p className="mt-2 text-muted">
           Discover AI agent builders who have verified their technical stack with SyncScore.
         </p>
       </div>
@@ -92,8 +89,8 @@ export default function BrowsePage() {
             className={[
               "rounded-full border-2 px-5 py-1.5 text-sm font-medium transition-all",
               activeTier === value
-                ? "border-[#10100F] bg-[#10100F] text-white"
-                : "border-[#D7D3CB] text-[#6B6B6B] hover:border-[#10100F] hover:text-[#000000]",
+                ? "border-trust-border bg-trust text-bg"
+                : "border-hairline-strong text-muted hover:border-trust-border hover:text-ink",
             ].join(" ")}
           >
             {label}
@@ -110,8 +107,8 @@ export default function BrowsePage() {
             className={[
               "rounded-full border-2 px-4 py-1.5 text-sm font-medium transition-all",
               activeArchConfidence === value
-                ? "border-[#10100F] bg-[#10100F] text-white"
-                : "border-[#D7D3CB] text-[#6B6B6B] hover:border-[#10100F] hover:text-[#000000]",
+                ? "border-trust-border bg-trust text-bg"
+                : "border-hairline-strong text-muted hover:border-trust-border hover:text-ink",
             ].join(" ")}
           >
             {label}
@@ -124,8 +121,8 @@ export default function BrowsePage() {
             className={[
               "rounded-full border-2 px-4 py-1.5 text-sm font-medium transition-all",
               activeArchStatus === value
-                ? "border-[#10100F] bg-[#10100F] text-white"
-                : "border-[#D7D3CB] text-[#6B6B6B] hover:border-[#10100F] hover:text-[#000000]",
+                ? "border-trust-border bg-trust text-bg"
+                : "border-hairline-strong text-muted hover:border-trust-border hover:text-ink",
             ].join(" ")}
           >
             {label}
@@ -139,12 +136,12 @@ export default function BrowsePage() {
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="h-40 animate-pulse rounded-[23px] bg-[#F6F6F3]"
+              className="h-40 animate-pulse rounded-[23px] bg-surface-inset"
             />
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="py-24 text-center text-[#6B6B6B]">
+        <div className="py-24 text-center text-muted">
           No verified agents found.
         </div>
       ) : (

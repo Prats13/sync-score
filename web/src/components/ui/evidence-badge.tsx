@@ -1,10 +1,10 @@
 import type { EvidenceGrade } from "@/lib/types"
 
 const CONFIG: Record<EvidenceGrade, { label: string; bg: string; text: string; dot: string }> = {
-  VERIFIED:   { label: "Verified",   bg: "bg-[#EBFFF2]", text: "text-[#279455]", dot: "bg-[#2ECC71]" },
-  DECLARED:   { label: "Declared",   bg: "bg-[#FFF8E1]", text: "text-[#B45309]", dot: "bg-[#F59E0B]" },
-  INFERRED:   { label: "Inferred",   bg: "bg-[#EEF2FF]", text: "text-[#4338CA]", dot: "bg-[#6366F1]" },
-  NOT_TESTED: { label: "Not tested", bg: "bg-[#F6F6F3]", text: "text-[#6B6B6B]", dot: "bg-[#D7D3CB]" },
+  VERIFIED:   { label: "Verified",   bg: "bg-verified-bg", text: "text-verified", dot: "bg-verified" },
+  DECLARED:   { label: "Declared",   bg: "bg-declared-bg", text: "text-declared", dot: "bg-[#F59E0B]" },
+  INFERRED:   { label: "Inferred",   bg: "bg-inferred-bg", text: "text-inferred", dot: "bg-[#6366F1]" },
+  NOT_TESTED: { label: "Not tested", bg: "bg-surface-inset", text: "text-muted", dot: "bg-hairline-strong" },
 }
 
 interface Props {

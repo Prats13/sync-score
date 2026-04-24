@@ -59,12 +59,12 @@ export function CompleteProfileModal({ open, onComplete }: Props) {
 
   return (
     <Dialog open={open}>
-      <DialogContent className="max-w-md border-2 border-[#D7D3CB] bg-[#F7F6F2]">
+      <DialogContent className="max-w-md border-2 border-hairline-strong bg-bg">
         <DialogHeader>
-          <DialogTitle style={{ fontFamily: "var(--font-dm-serif-text)" }}>
+          <DialogTitle style={{ fontFamily: "var(--font-display)" }}>
             Complete your profile
           </DialogTitle>
-          <DialogDescription className="text-[#6B6B6B]">
+          <DialogDescription className="text-muted">
             Tell us about your agency to get started.
           </DialogDescription>
         </DialogHeader>
@@ -72,7 +72,7 @@ export function CompleteProfileModal({ open, onComplete }: Props) {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-1.5">
             <Label htmlFor="name">Agency name *</Label>
-            <Input id="name" {...register("name")} className="border-[#D7D3CB] bg-white" />
+            <Input id="name" {...register("name")} className="border-hairline-strong bg-surface-1" />
             {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
           </div>
 
@@ -82,7 +82,7 @@ export function CompleteProfileModal({ open, onComplete }: Props) {
               id="niche"
               placeholder="e.g. AI agents for legal teams"
               {...register("niche")}
-              className="border-[#D7D3CB] bg-white"
+              className="border-hairline-strong bg-surface-1"
             />
           </div>
 
@@ -92,7 +92,7 @@ export function CompleteProfileModal({ open, onComplete }: Props) {
               id="websiteUrl"
               placeholder="https://..."
               {...register("websiteUrl")}
-              className="border-[#D7D3CB] bg-white"
+              className="border-hairline-strong bg-surface-1"
             />
             {errors.websiteUrl && (
               <p className="text-xs text-red-500">{errors.websiteUrl.message}</p>
@@ -105,7 +105,7 @@ export function CompleteProfileModal({ open, onComplete }: Props) {
               id="bookingUrl"
               placeholder="https://cal.com/..."
               {...register("bookingUrl")}
-              className="border-[#D7D3CB] bg-white"
+              className="border-hairline-strong bg-surface-1"
             />
             {errors.bookingUrl && (
               <p className="text-xs text-red-500">{errors.bookingUrl.message}</p>
@@ -121,7 +121,7 @@ export function CompleteProfileModal({ open, onComplete }: Props) {
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-full bg-[#10100F] text-white hover:bg-[#10100F]/80"
+            className="w-full rounded-full bg-trust text-bg hover:bg-trust/80"
           >
             {isSubmitting ? "Saving…" : "Save and continue"}
           </Button>

@@ -99,18 +99,18 @@ function StepIndicator({ current, total }: { current: number; total: number }) {
             <div className="flex flex-col items-center gap-1">
               <div className={[
                 "flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold",
-                done ? "bg-[#2ECC71] text-white"
-                : active ? "bg-[#10100F] text-white"
-                : "border-2 border-[#D7D3CB] bg-white text-[#6B6B6B]",
+                done ? "bg-verified text-bg"
+                : active ? "bg-trust text-bg"
+                : "border-2 border-hairline-strong bg-surface-1 text-muted",
               ].join(" ")}>
                 {done ? "✓" : idx}
               </div>
-              <span className={`hidden text-[10px] sm:block ${active ? "font-semibold text-[#000000]" : "text-[#6B6B6B]"}`}>
+              <span className={`hidden text-[10px] sm:block ${active ? "font-semibold text-ink" : "text-muted"}`}>
                 {label}
               </span>
             </div>
             {i < total - 1 && (
-              <div className={`mb-4 h-px w-8 ${done ? "bg-[#2ECC71]" : "bg-[#D7D3CB]"}`} />
+              <div className={`mb-4 h-px w-8 ${done ? "bg-verified" : "bg-hairline-strong"}`} />
             )}
           </div>
         )
@@ -161,13 +161,13 @@ export default function TranslatePage() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-12">
       <div className="mb-8 text-center">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-[#6B6B6B]">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-muted">
           Smarter Translator
         </p>
-        <h1 className="text-3xl text-[#000000]" style={{ fontFamily: "var(--font-dm-serif-display)" }}>
+        <h1 className="text-3xl text-ink" style={{ fontFamily: "var(--font-display)" }}>
           Find the right AI agency
         </h1>
-        <p className="mt-2 text-sm text-[#6B6B6B]">
+        <p className="mt-2 text-sm text-muted">
           Tell us about your project and we&apos;ll rank verified agencies by fit — not just score.
         </p>
       </div>
@@ -186,9 +186,9 @@ export default function TranslatePage() {
 
       {/* Step 1: Problem */}
       {step === 1 && (
-        <div className="rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-8">
-          <h2 className="mb-1 text-xl font-semibold text-[#000000]">What are you trying to solve?</h2>
-          <p className="mb-5 text-sm text-[#6B6B6B]">
+        <div className="rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-8">
+          <h2 className="mb-1 text-xl font-semibold text-ink">What are you trying to solve?</h2>
+          <p className="mb-5 text-sm text-muted">
             Describe the business problem or workflow you want to automate with AI.
           </p>
           <textarea
@@ -196,13 +196,13 @@ export default function TranslatePage() {
             onChange={(e) => setIntake({ ...intake, problem: e.target.value })}
             placeholder="e.g. We need an AI agent to handle customer support tickets and escalate complex cases to humans…"
             rows={5}
-            className="w-full rounded-xl border-2 border-[#D7D3CB] bg-white px-4 py-3 text-sm text-[#000000] outline-none focus:border-[#10100F]"
+            className="w-full rounded-xl border-2 border-hairline-strong bg-surface-1 px-4 py-3 text-sm text-ink outline-none focus:border-trust-border"
           />
           <div className="mt-5 flex justify-end">
             <Button
               disabled={intake.problem.trim().length < 10}
               onClick={() => setStep(2)}
-              className="rounded-full bg-[#10100F] text-white hover:bg-[#10100F]/80"
+              className="rounded-full bg-trust text-bg hover:bg-trust/80"
             >
               Continue →
             </Button>
@@ -212,9 +212,9 @@ export default function TranslatePage() {
 
       {/* Step 2: Industry */}
       {step === 2 && (
-        <div className="rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-8">
-          <h2 className="mb-1 text-xl font-semibold text-[#000000]">What&apos;s your industry?</h2>
-          <p className="mb-5 text-sm text-[#6B6B6B]">
+        <div className="rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-8">
+          <h2 className="mb-1 text-xl font-semibold text-ink">What&apos;s your industry?</h2>
+          <p className="mb-5 text-sm text-muted">
             We&apos;ll prioritise agencies with relevant domain experience.
           </p>
           <div className="flex flex-wrap gap-2">
@@ -225,8 +225,8 @@ export default function TranslatePage() {
                 className={[
                   "rounded-full border-2 px-4 py-1.5 text-sm font-medium transition-all",
                   intake.industry === ind
-                    ? "border-[#10100F] bg-[#10100F] text-white"
-                    : "border-[#D7D3CB] bg-white text-[#000000] hover:border-[#10100F]/40",
+                    ? "border-trust-border bg-trust text-bg"
+                    : "border-hairline-strong bg-surface-1 text-ink hover:border-trust-border/40",
                 ].join(" ")}
               >
                 {ind}
@@ -238,7 +238,7 @@ export default function TranslatePage() {
             <Button
               disabled={!intake.industry}
               onClick={() => setStep(3)}
-              className="rounded-full bg-[#10100F] text-white hover:bg-[#10100F]/80"
+              className="rounded-full bg-trust text-bg hover:bg-trust/80"
             >
               Continue →
             </Button>
@@ -248,9 +248,9 @@ export default function TranslatePage() {
 
       {/* Step 3: Capabilities */}
       {step === 3 && (
-        <div className="rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-8">
-          <h2 className="mb-1 text-xl font-semibold text-[#000000]">What capabilities matter most?</h2>
-          <p className="mb-5 text-sm text-[#6B6B6B]">Select all that apply — we&apos;ll weight verified evidence in these areas.</p>
+        <div className="rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-8">
+          <h2 className="mb-1 text-xl font-semibold text-ink">What capabilities matter most?</h2>
+          <p className="mb-5 text-sm text-muted">Select all that apply — we&apos;ll weight verified evidence in these areas.</p>
           <div className="space-y-2">
             {CAPABILITY_OPTIONS.map((cap) => (
               <button
@@ -259,13 +259,13 @@ export default function TranslatePage() {
                 className={[
                   "w-full rounded-xl border-2 px-4 py-3 text-left text-sm transition-all",
                   intake.capabilities.includes(cap.id)
-                    ? "border-[#10100F] bg-white font-medium text-[#000000]"
-                    : "border-[#D7D3CB] bg-white text-[#6B6B6B] hover:border-[#10100F]/30",
+                    ? "border-trust-border bg-surface-1 font-medium text-ink"
+                    : "border-hairline-strong bg-surface-1 text-muted hover:border-trust-border/30",
                 ].join(" ")}
               >
                 <div className="flex items-center justify-between">
                   <span>{cap.label}</span>
-                  {intake.capabilities.includes(cap.id) && <span className="text-[#2ECC71]">✓</span>}
+                  {intake.capabilities.includes(cap.id) && <span className="text-verified">✓</span>}
                 </div>
               </button>
             ))}
@@ -274,7 +274,7 @@ export default function TranslatePage() {
             <Button variant="outline" onClick={() => setStep(2)}>← Back</Button>
             <Button
               onClick={() => setStep(4)}
-              className="rounded-full bg-[#10100F] text-white hover:bg-[#10100F]/80"
+              className="rounded-full bg-trust text-bg hover:bg-trust/80"
             >
               Continue →
             </Button>
@@ -284,9 +284,9 @@ export default function TranslatePage() {
 
       {/* Step 4: Tier */}
       {step === 4 && (
-        <div className="rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-8">
-          <h2 className="mb-1 text-xl font-semibold text-[#000000]">What maturity level do you need?</h2>
-          <p className="mb-5 text-sm text-[#6B6B6B]">SyncScore tiers reflect verified architecture depth.</p>
+        <div className="rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-8">
+          <h2 className="mb-1 text-xl font-semibold text-ink">What maturity level do you need?</h2>
+          <p className="mb-5 text-sm text-muted">SyncScore tiers reflect verified architecture depth.</p>
           <div className="space-y-3">
             {TIER_OPTIONS.map((t) => (
               <button
@@ -295,16 +295,16 @@ export default function TranslatePage() {
                 className={[
                   "w-full rounded-xl border-2 p-4 text-left transition-all",
                   intake.tier === t.value
-                    ? "border-[#10100F] bg-white"
-                    : "border-[#D7D3CB] bg-white hover:border-[#10100F]/30",
+                    ? "border-trust-border bg-surface-1"
+                    : "border-hairline-strong bg-surface-1 hover:border-trust-border/30",
                 ].join(" ")}
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-semibold text-[#000000]">{t.label}</p>
-                    <p className="mt-0.5 text-xs text-[#6B6B6B]">{t.desc}</p>
+                    <p className="text-sm font-semibold text-ink">{t.label}</p>
+                    <p className="mt-0.5 text-xs text-muted">{t.desc}</p>
                   </div>
-                  {intake.tier === t.value && <span className="text-[#2ECC71]">✓</span>}
+                  {intake.tier === t.value && <span className="text-verified">✓</span>}
                 </div>
               </button>
             ))}
@@ -313,7 +313,7 @@ export default function TranslatePage() {
             <Button variant="outline" onClick={() => setStep(3)}>← Back</Button>
             <Button
               onClick={() => setStep(5)}
-              className="rounded-full bg-[#10100F] text-white hover:bg-[#10100F]/80"
+              className="rounded-full bg-trust text-bg hover:bg-trust/80"
             >
               Continue →
             </Button>
@@ -323,9 +323,9 @@ export default function TranslatePage() {
 
       {/* Step 5: Budget */}
       {step === 5 && (
-        <div className="rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-8">
-          <h2 className="mb-1 text-xl font-semibold text-[#000000]">What&apos;s your monthly budget?</h2>
-          <p className="mb-5 text-sm text-[#6B6B6B]">This helps surface agencies that are the right fit without over-engineering.</p>
+        <div className="rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-8">
+          <h2 className="mb-1 text-xl font-semibold text-ink">What&apos;s your monthly budget?</h2>
+          <p className="mb-5 text-sm text-muted">This helps surface agencies that are the right fit without over-engineering.</p>
           <div className="space-y-3">
             {BUDGET_OPTIONS.map((b) => (
               <button
@@ -334,13 +334,13 @@ export default function TranslatePage() {
                 className={[
                   "w-full rounded-xl border-2 px-4 py-3 text-left text-sm transition-all",
                   intake.budget === b.id
-                    ? "border-[#10100F] bg-white font-medium text-[#000000]"
-                    : "border-[#D7D3CB] bg-white text-[#6B6B6B] hover:border-[#10100F]/30",
+                    ? "border-trust-border bg-surface-1 font-medium text-ink"
+                    : "border-hairline-strong bg-surface-1 text-muted hover:border-trust-border/30",
                 ].join(" ")}
               >
                 <div className="flex items-center justify-between">
                   <span>{b.label}</span>
-                  {intake.budget === b.id && <span className="text-[#2ECC71]">✓</span>}
+                  {intake.budget === b.id && <span className="text-verified">✓</span>}
                 </div>
               </button>
             ))}
@@ -350,7 +350,7 @@ export default function TranslatePage() {
             <Button
               disabled={!intake.budget || isLoading}
               onClick={runMatch}
-              className="rounded-full bg-[#10100F] text-white hover:bg-[#10100F]/80"
+              className="rounded-full bg-trust text-bg hover:bg-trust/80"
             >
               {isLoading ? "Finding matches…" : "Find matches →"}
             </Button>
@@ -363,10 +363,10 @@ export default function TranslatePage() {
         <div>
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-[#000000]">
+              <h2 className="text-xl font-semibold text-ink">
                 {results.length} match{results.length !== 1 ? "es" : ""} found
               </h2>
-              <p className="mt-0.5 text-sm text-[#6B6B6B]">
+              <p className="mt-0.5 text-sm text-muted">
                 Ranked by fit with your project — not just overall score.
               </p>
             </div>
@@ -376,7 +376,7 @@ export default function TranslatePage() {
           </div>
 
           {results.length === 0 ? (
-            <div className="rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-8 text-center text-[#6B6B6B]">
+            <div className="rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-8 text-center text-muted">
               No verified agencies match your current criteria. Try broadening your tier or capability filters.
             </div>
           ) : (
@@ -385,25 +385,25 @@ export default function TranslatePage() {
                 <Link
                   key={agency.agencyId}
                   href={`/agents/${agency.slug}`}
-                  className="block rounded-[23px] border-2 border-[#D7D3CB] bg-[#F6F6F3] p-5 transition-all hover:border-[#10100F]"
+                  className="block rounded-[23px] border-2 border-hairline-strong bg-surface-inset p-5 transition-all hover:border-trust-border"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         {i === 0 && (
-                          <span className="rounded-full bg-[#EBFFF2] px-2 py-0.5 text-[10px] font-semibold text-[#279455]">
+                          <span className="rounded-full bg-verified-bg px-2 py-0.5 text-[10px] font-semibold text-verified">
                             #1 match
                           </span>
                         )}
-                        <h3 className="text-base font-semibold text-[#000000]">{agency.agencyName}</h3>
+                        <h3 className="text-base font-semibold text-ink">{agency.agencyName}</h3>
                       </div>
                       {agency.niche && (
-                        <p className="mt-0.5 text-sm text-[#6B6B6B]">{agency.niche}</p>
+                        <p className="mt-0.5 text-sm text-muted">{agency.niche}</p>
                       )}
                       {agency.fitReasons.length > 0 && (
                         <div className="mt-2 flex flex-wrap gap-1.5">
                           {agency.fitReasons.map((r) => (
-                            <span key={r} className="rounded-full border border-[#D7D3CB] bg-white px-2 py-0.5 text-[10px] text-[#6B6B6B]">
+                            <span key={r} className="rounded-full border border-hairline-strong bg-surface-1 px-2 py-0.5 text-[10px] text-muted">
                               {r}
                             </span>
                           ))}
@@ -412,13 +412,13 @@ export default function TranslatePage() {
                     </div>
                     <div className="flex shrink-0 flex-col items-end gap-2">
                       <div className="flex items-center gap-1.5">
-                        <div className="h-1.5 w-16 overflow-hidden rounded-full bg-[#D7D3CB]">
+                        <div className="h-1.5 w-16 overflow-hidden rounded-full bg-hairline-strong">
                           <div
-                            className="h-full rounded-full bg-[#10100F]"
+                            className="h-full rounded-full bg-trust"
                             style={{ width: `${agency.fitScore}%` }}
                           />
                         </div>
-                        <span className="text-xs font-semibold tabular-nums text-[#000000]">
+                        <span className="text-xs font-semibold tabular-nums text-ink">
                           {agency.fitScore}%
                         </span>
                       </div>

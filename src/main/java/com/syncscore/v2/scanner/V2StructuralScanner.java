@@ -5,6 +5,7 @@ import com.syncscore.v1.scanner.github.GitHubApiClient.RepoSummary;
 import com.syncscore.v1.scanner.github.GitHubApiClient.TreeItem;
 import com.syncscore.v1.scanner.GitHubScanProperties;
 import java.time.Instant;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +30,19 @@ public class V2StructuralScanner {
         this.aggregator = aggregator;
     }
 
-    public StructuralSignalAggregator.AggregatedSignals scan(String githubUsername, int detectedPackageCount) {
+    public record ScanResult(
+            StructuralSignalAggregator.AggregatedSignals signals,
+            List<RepoStructuralSignals> repos
+    ) {}
+
+    public ScanResult scan(String githubUsername, int detectedPackageCount) {
         List<RepoSummary> repos = gitHubApi.listPublicReposByPushedDesc(githubUsername);
         int limit = Math.min(repos.size(), props.repoScanDefaultLimit());
 
         List<RepoStructuralSignals> repoSignals = new ArrayList<>();
         Instant since30d = Instant.now().minus(30, ChronoUnit.DAYS);
         Instant since90d = Instant.now().minus(90, ChronoUnit.DAYS);
+        Instant now = Instant.now();
 
         for (RepoSummary repo : repos.subList(0, limit)) {
             if (repo == null || repo.owner() == null || !StringUtils.hasText(repo.owner().login())) continue;
@@ -53,6 +60,13 @@ public class V2StructuralScanner {
             int commitCount = gitHubApi.listCommitCount(owner, name, since90d);
             int contributorCount = gitHubApi.listContributorCount(owner, name);
 
+            int ageMonths = 0;
+            if (repo.createdAt() != null) {
+                ageMonths = (int) Math.max(0, ChronoUnit.MONTHS.between(
+                        repo.createdAt().atZone(ZoneOffset.UTC).toLocalDate(),
+                        now.atZone(ZoneOffset.UTC).toLocalDate()));
+            }
+
             repoSignals.add(new RepoStructuralSignals(
                     owner + "/" + name,
                     commitCount30d,
@@ -66,6 +80,6 @@ public class V2StructuralScanner {
             ));
         }
 
-        return aggregator.aggregate(repoSignals);
+        return new ScanResult(aggregator.aggregate(repoSignals), repoSignals);
     }
 }

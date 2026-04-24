@@ -11,6 +11,7 @@ import com.syncscore.v2.domain.ArchConfidence;
 import com.syncscore.v2.domain.ArchStatus;
 import com.syncscore.v2.domain.ArchitectureScan;
 import com.syncscore.v2.domain.ConfidentialScanSession;
+import com.syncscore.v2.repo.ArchScanRepoRepository;
 import com.syncscore.v2.repo.ArchScanStructuralSignalRepository;
 import com.syncscore.v2.repo.ArchitectureReviewCaseRepository;
 import com.syncscore.v2.repo.ArchitectureScanRepository;
@@ -19,6 +20,7 @@ import com.syncscore.v2.scanner.V2StructuralScanner;
 import com.syncscore.v2.scoring.AntiGamingEvaluator;
 import com.syncscore.v2.scoring.V2ConfidenceScorer;
 import com.syncscore.v1.repo.AgencyProfileRepository;
+import com.syncscore.v1.repo.EvidenceItemRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,12 +37,15 @@ class V2ScanOrchestratorTest {
 
     @Mock ArchitectureScanRepository archScanRepo;
     @Mock ArchScanStructuralSignalRepository signalRepo;
+    @Mock ArchScanRepoRepository scanRepoRepo;
     @Mock ArchitectureReviewCaseRepository reviewCaseRepo;
     @Mock ConfidentialScanSessionRepository sessionRepo;
     @Mock AgencyProfileRepository agencyRepo;
+    @Mock EvidenceItemRepository evidenceRepo;
     @Mock V2StructuralScanner structuralScanner;
     @Mock V2ConfidenceScorer confidenceScorer;
     @Mock AntiGamingEvaluator antiGamingEvaluator;
+    @Mock LLMScoringService llmScoringService;
     @Mock V2ScanAsyncBridge asyncBridge;
 
     V2ScanOrchestrator orchestrator;
@@ -48,9 +53,9 @@ class V2ScanOrchestratorTest {
     @BeforeEach
     void setUp() {
         orchestrator = new V2ScanOrchestrator(
-                archScanRepo, signalRepo, reviewCaseRepo, sessionRepo,
-                agencyRepo, structuralScanner, confidenceScorer,
-                antiGamingEvaluator, asyncBridge, new ObjectMapper());
+                archScanRepo, signalRepo, scanRepoRepo, reviewCaseRepo, sessionRepo,
+                agencyRepo, evidenceRepo, structuralScanner, confidenceScorer,
+                antiGamingEvaluator, llmScoringService, asyncBridge, new ObjectMapper());
     }
 
     private ArchitectureScan stubbedScan(UUID agencyId) {
