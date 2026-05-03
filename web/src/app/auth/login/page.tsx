@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { GoogleLogin } from "@react-oauth/google"
 import { authApi } from "@/lib/api/auth"
 import { ApiError } from "@/lib/api/client"
 import { useAuth } from "@/lib/hooks/use-auth"
@@ -50,6 +51,26 @@ export default function LoginPage() {
     }
   }
 
+  const onGoogleSuccess = async (credential: string) => {
+    setError(null)
+    try {
+      const pair = await authApi.loginGoogle({ idToken: credential })
+      await login(pair)
+      router.push("/dashboard")
+    } catch (err) {
+      if (err instanceof ApiError) {
+        if (err.status === 409 && err.data?.signupToken) {
+          // Google account exists but signup not complete — continue to profile step
+          router.push(`/auth/signup?token=${err.data.signupToken}`)
+        } else {
+          setError(err.message)
+        }
+      } else {
+        setError("Google sign-in failed. Please try again.")
+      }
+    }
+  }
+
   return (
     <div className="flex min-h-[70vh] items-center justify-center px-6">
       <div className="w-full max-w-sm">
@@ -61,6 +82,23 @@ export default function LoginPage() {
         </div>
 
         <div className="card-base p-8">
+          {/* Google SSO */}
+          <div className="flex justify-center">
+            <GoogleLogin
+              onSuccess={(res) => res.credential && onGoogleSuccess(res.credential)}
+              onError={() => setError("Google sign-in failed.")}
+              theme="filled_black"
+              shape="pill"
+              text="signin_with"
+            />
+          </div>
+
+          <div className="my-5 flex items-center gap-3">
+            <span className="flex-1 h-px bg-hairline-strong" />
+            <span className="text-[11px] text-muted">or</span>
+            <span className="flex-1 h-px bg-hairline-strong" />
+          </div>
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-1.5">
               <Label htmlFor="username" className="text-ink">Username</Label>

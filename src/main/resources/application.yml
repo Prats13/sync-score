@@ -38,6 +38,8 @@ app:
     pepper: ${APP_REFRESH_PEPPER:dev-refresh-pepper-change-me}
   google:
     client-id: ${APP_GOOGLE_CLIENT_ID:}
+  mail:
+    from: ${APP_MAIL_FROM:noreply@syncscore.io}
   integrity:
     enabled: ${APP_INTEGRITY_ENABLED:true}
     freshness-threshold-days: ${APP_INTEGRITY_FRESHNESS_THRESHOLD_DAYS:14}

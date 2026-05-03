@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google"
 import "./globals.css"
-import { AuthProvider } from "@/lib/auth-context"
+import { Providers } from "@/lib/providers"
 import { Navbar } from "@/components/layout/navbar"
 import { Footer } from "@/components/layout/footer"
 
@@ -42,11 +42,11 @@ export default function RootLayout({
       className={`${inter.variable} ${instrument.variable} ${jetbrains.variable} h-full`}
     >
       <body className="flex min-h-full flex-col font-sans antialiased text-ink bg-bg">
-        <AuthProvider>
+        <Providers>
           <Navbar />
           <main className="flex-1">{children}</main>
           <Footer />
-        </AuthProvider>
+        </Providers>
       </body>
     </html>
   )

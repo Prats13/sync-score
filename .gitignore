@@ -18,3 +18,13 @@ target/
 
 .env
 .env.local
+
+.claude/
+
+graphify-out/
+
+.env.railway
+
+meta.json
+
+web/
