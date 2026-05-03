@@ -4,7 +4,6 @@ import com.syncscore.auth.service.AuthServiceExceptions;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,12 +14,6 @@ public class ApiExceptionHandler {
     public ResponseEntity<?> handleStatus(ResponseStatusException e) {
         HttpStatus status = (HttpStatus) e.getStatusCode();
         return ResponseEntity.status(status).body(Map.of("error", e.getReason()));
-    }
-
-    @ExceptionHandler(MailException.class)
-    public ResponseEntity<?> handleMail(MailException e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("error", "Failed to send verification email. Please try again later."));
     }
 
     @ExceptionHandler(AuthServiceExceptions.SignupIncompleteException.class)

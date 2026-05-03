@@ -2,13 +2,6 @@ server:
   port: ${PORT:9741}
 
 spring:
-  mail:
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/syncscore}
     username: ${SPRING_DATASOURCE_USERNAME:syncscore}
