@@ -1,7 +1,6 @@
 "use client"
 
-export const dynamic = "force-dynamic"
-
+import { Suspense } from "react"
 import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -38,6 +37,14 @@ type CompleteForm = z.infer<typeof completeSchema>
 type Step = "email" | "otp" | "complete"
 
 export default function SignupPage() {
+  return (
+    <Suspense>
+      <SignupContent />
+    </Suspense>
+  )
+}
+
+function SignupContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { login } = useAuth()
