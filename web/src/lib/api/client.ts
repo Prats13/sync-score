@@ -48,6 +48,7 @@ export class ApiError extends Error {
   constructor(
     public readonly status: number,
     message: string,
+    public readonly data?: Record<string, unknown>,
   ) {
     super(message)
     this.name = "ApiError"
@@ -109,13 +110,14 @@ export async function apiFetch<T>(
 
   if (!res.ok) {
     let message = `HTTP ${res.status}`
+    let data: Record<string, unknown> | undefined
     try {
-      const body = await res.json()
-      message = body.message ?? body.error ?? message
+      data = await res.json()
+      message = (data?.message ?? data?.error ?? message) as string
     } catch {
       // ignore JSON parse failure
     }
-    throw new ApiError(res.status, message)
+    throw new ApiError(res.status, message, data)
   }
 
   // 204 No Content or empty body (Spring void endpoints return 200 with no body)

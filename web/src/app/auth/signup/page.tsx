@@ -1,11 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
+import { GoogleLogin } from "@react-oauth/google"
 import { authApi } from "@/lib/api/auth"
 import { ApiError } from "@/lib/api/client"
 import { useAuth } from "@/lib/hooks/use-auth"
@@ -36,12 +37,22 @@ type Step = "email" | "otp" | "complete"
 
 export default function SignupPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { login } = useAuth()
 
   const [step, setStep] = useState<Step>("email")
   const [email, setEmail] = useState("")
   const [signupToken, setSignupToken] = useState("")
   const [error, setError] = useState<string | null>(null)
+
+  // If redirected from Google login with an incomplete signup token, jump to complete
+  useEffect(() => {
+    const token = searchParams.get("token")
+    if (token) {
+      setSignupToken(token)
+      setStep("complete")
+    }
+  }, [searchParams])
 
   // ── Step 1: Email ────────────────────────────────────────────────────────
   const emailForm = useForm<EmailForm>({ resolver: zodResolver(emailSchema) })
@@ -82,6 +93,29 @@ export default function SignupPage() {
     }
   }
 
+  // ── Google signup ─────────────────────────────────────────────────────────
+  const onGoogleSuccess = async (credential: string) => {
+    setError(null)
+    try {
+      const res = await authApi.signupGoogle({ idToken: credential })
+      if ("signupToken" in res) {
+        // Profile incomplete — go to username/password step
+        setSignupToken(res.signupToken)
+        setStep("complete")
+      } else {
+        // Already a complete account (shouldn't normally happen via /signup/google)
+        await login(res)
+        router.push("/dashboard")
+      }
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 409) {
+        setError("This Google account is already registered. Please log in instead.")
+      } else {
+        setError(err instanceof ApiError ? err.message : "Google sign-in failed.")
+      }
+    }
+  }
+
   // ── Step indicator ────────────────────────────────────────────────────────
   const steps = ["Email", "Verify", "Profile"]
   const currentIdx = step === "email" ? 0 : step === "otp" ? 1 : 2
@@ -119,35 +153,53 @@ export default function SignupPage() {
         </div>
 
         <div className="card-base p-8">
-          {/* Step 1: Email */}
+          {/* Step 1: Email (with Google option) */}
           {step === "email" && (
-            <form onSubmit={emailForm.handleSubmit(onEmailSubmit)} className="space-y-4">
-              <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-ink">Email address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  {...emailForm.register("email")}
-                  className="border-hairline-strong bg-surface-1 text-ink focus-visible:ring-trust"
+            <>
+              <div className="flex justify-center">
+                <GoogleLogin
+                  onSuccess={(res) => res.credential && onGoogleSuccess(res.credential)}
+                  onError={() => setError("Google sign-in failed.")}
+                  theme="filled_black"
+                  shape="pill"
+                  text="signup_with"
                 />
-                {emailForm.formState.errors.email && (
-                  <p className="text-xs text-mismatch">{emailForm.formState.errors.email.message}</p>
-                )}
               </div>
-              {error && (
-                <div className="rounded-lg border border-mismatch-bg bg-mismatch-bg/30 px-3 py-2 text-sm text-mismatch">
-                  {error}
+
+              <div className="my-5 flex items-center gap-3">
+                <span className="flex-1 h-px bg-hairline-strong" />
+                <span className="text-[11px] text-muted">or</span>
+                <span className="flex-1 h-px bg-hairline-strong" />
+              </div>
+
+              <form onSubmit={emailForm.handleSubmit(onEmailSubmit)} className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="email" className="text-ink">Email address</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    autoComplete="email"
+                    {...emailForm.register("email")}
+                    className="border-hairline-strong bg-surface-1 text-ink focus-visible:ring-trust"
+                  />
+                  {emailForm.formState.errors.email && (
+                    <p className="text-xs text-mismatch">{emailForm.formState.errors.email.message}</p>
+                  )}
                 </div>
-              )}
-              <Button
-                type="submit"
-                disabled={emailForm.formState.isSubmitting}
-                className="w-full mt-2 rounded-full bg-trust text-bg hover:opacity-80 transition-opacity"
-              >
-                {emailForm.formState.isSubmitting ? "Sending…" : "Send verification code"}
-              </Button>
-            </form>
+                {error && (
+                  <div className="rounded-lg border border-mismatch-bg bg-mismatch-bg/30 px-3 py-2 text-sm text-mismatch">
+                    {error}
+                  </div>
+                )}
+                <Button
+                  type="submit"
+                  disabled={emailForm.formState.isSubmitting}
+                  className="w-full mt-2 rounded-full bg-trust text-bg hover:opacity-80 transition-opacity"
+                >
+                  {emailForm.formState.isSubmitting ? "Sending…" : "Send verification code"}
+                </Button>
+              </form>
+            </>
           )}
 
           {/* Step 2: OTP */}
